@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::API
   include Rendering
   include Serialization
+  include Responses
 
   before_action :authenticate_request!
 
@@ -23,6 +24,13 @@ class ApplicationController < ActionController::API
          JWT::ExpiredSignature,
          UnauthorizedError
     render json: { error: "Unauthorized" }, status: :unauthorized
+  end
+
+  def render_serialized(resource, status: :ok, **options)
+    render(
+      json: serialize(resource, **options),
+      status: status
+    )
   end
 
   class UnauthorizedError < StandardError; end

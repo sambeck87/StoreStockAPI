@@ -1,17 +1,21 @@
 class Api::V1::UserSerializer < BaseSerializer
-  def full
-    {
-      id: @resource.id,
-      email: @resource.email,
-      full_name: @resource.full_name,
-      active: @resource.active
-    }
+  def initialize(user)
+    @user = user
   end
 
   def compact
     {
-      full_name: @resource.full_name,
-      active: @resource.active
+      full_name: @user.full_name,
+      active: @user.active
+    }
+  end
+
+  def full
+    {
+      id: @user.id,
+      email: @user.email,
+      full_name: @user.full_name,
+      active: @user.active
     }
   end
 end

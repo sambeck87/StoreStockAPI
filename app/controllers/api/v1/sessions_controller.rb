@@ -9,6 +9,6 @@ class Api::V1::SessionsController < ApplicationController
 
     token = JsonWebToken.encode(user_id: user.id)
 
-    render json: Api::V1::SessionSerializer.new(user, token).full
+    render_response({ user: user, token: token }, with: :session, status: :created)
   end
 end

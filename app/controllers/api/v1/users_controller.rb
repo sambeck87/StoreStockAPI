@@ -3,7 +3,7 @@ class Api::V1::UsersController < ApplicationController
 
   def index
     users = User.all
-    render_resource(:users, serialize(users, with: :user))
+    render_serialized(users, with: :user, view: :full, status: :ok)
   end
 
   def create
@@ -12,14 +12,7 @@ class Api::V1::UsersController < ApplicationController
     if user.save
       token = JsonWebToken.encode(user_id: user.id)
 
-      render json: {
-        token: token,
-        expires_in: 24.hours.to_i,
-        user: {
-          id: user.id,
-          email: user.email
-        }
-      }, status: :created
+      render_response({ user: user, token: token }, with: :session, status: :created)
     else
       render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
     end
