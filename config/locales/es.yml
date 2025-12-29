@@ -1,0 +1,26 @@
+es:
+  errors:
+    not_found: "Recurso no encontrado"
+    authentication:
+      invalid_credentials: "Credenciales inválidas"
+    authorization:
+      forbidden: "No tienes permisos para realizar esta acción"
+    unauthorized: "No estás autorizado para realizar esta acción"
+
+  activerecord:
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              blank: "no puede estar vacío"
+              taken: "ya está en uso"
+            password:
+              blank: "no puede estar vacía"
+              too_short: "es demasiado corta"
+              invalid: "la contraseña debe contener al menos 8 caracteres, una letra mayúscula, una letra minúscula y un número"
+            password_confirmation:
+              blank: "no puede estar vacía"
+              confirmation: "la contraseña no coincide con la confirmación"
+            full_name:
+              blank: "no puede estar vacío"

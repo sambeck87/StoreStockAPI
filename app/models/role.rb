@@ -6,12 +6,18 @@ class Role < ApplicationRecord
 
   validates :name, presence: true
 
-  ALL_PERMISSIONS = {user: [:create, :read, :update, :delete],
-                      store: [:create, :read, :update, :delete],
-                      branch: [:create, :read, :update, :delete],
-                      category: [:create, :read, :update, :delete],
-                      item: [:create, :read, :update, :delete],
-                      role: [:create, :read, :update, :delete],
-                      permission: [:create, :read, :update, :delete]
+  ALL_PERMISSIONS = {user: [:index, :show, :create, :update, :delete],
+                      store: [:index, :show, :create, :update, :delete],
+                      branch: [:index, :show, :create, :update, :delete],
+                      category: [:index, :show, :create, :update, :delete],
+                      item: [:index, :show, :create, :update, :delete],
+                      role: [:index, :show, :create, :update, :delete],
+                      permission: [:index, :show, :create, :update, :delete]
                     }
+
+  def allows?(resource, action)
+    permissions
+      .fetch(resource.to_s, [])
+      .include?(action.to_s)
+  end
 end

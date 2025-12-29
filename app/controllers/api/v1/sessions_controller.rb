@@ -4,8 +4,7 @@ class Api::V1::SessionsController < ApplicationController
   def create
     user = User.find_by(email: params[:email])
 
-    return render json: { error: "Invalid credentials" }, status: :unauthorized unless
-      user&.authenticate(params[:password])
+    raise AuthenticationError unless user&.authenticate(params[:password])
 
     token = JsonWebToken.encode(user_id: user.id)
 

@@ -10,7 +10,7 @@ class Api::V1::PasswordsController < ApplicationController
   def update
     user = User.find_by(reset_password_token: params[:token])
 
-    return render json: { error: "Invalid token" }, status: :unauthorized unless user
+    raise InvalidTokenError unless user
 
     if user.update(
       password: params[:password],
