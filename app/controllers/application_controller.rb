@@ -5,6 +5,7 @@ class ApplicationController < ActionController::API
   include Responses
 
   before_action :authenticate_request!
+  before_action :ensure_active_user!
   before_action :set_locale
 
   attr_reader :current_user
@@ -33,18 +34,29 @@ class ApplicationController < ActionController::API
   end
 
   def current_branch
-    branch_id = params[:branch_id]
+    return @current_branch if defined?(@current_branch)
 
-    @current_branch = branch_id ? current_user.branches.find(branch_id) : nil
+    return @current_branch = nil unless params[:branch_id]
+
+    @current_branch = current_store.branches.find(params[:branch_id])
+  end
+
+  def current_store
+    return @current_store if defined?(@current_store)
+
+    @current_store =
+      if current_user.super_admin? && params[:store_id]
+        Store.find(params[:store_id])
+      else
+        current_user.store
+      end
   end
 
   def authorize!(record)
     policy = policy_for(record)
     action = "#{action_name}?"
 
-    unless policy.public_send(action)
-      raise UnauthorizedError
-    end
+    raise UnauthorizedError unless policy.public_send(action)
   end
 
   def policy_for(record)
@@ -57,11 +69,9 @@ class ApplicationController < ActionController::API
     )
   end
 
-  def find_resource(klass)
-    param =
-      params["#{klass.name.underscore}_id"] ||
-      params[:id]
+  def ensure_active_user!
+    return if current_user.active?
 
-    klass.find(param)
+    raise InactiveUserError
   end
 end

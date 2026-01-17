@@ -32,6 +32,15 @@ class BusinessRuleError < ApiError
   end
 end
 
+class DependencyViolationError < ApiError
+  attr_reader :details
+
+  def initialize(message, details: {})
+    super(message, status: 422, code: :dependency_violation)
+    @details = details
+  end
+end
+
 class ValidationError < ApiError
   attr_reader :details
 
@@ -61,6 +70,30 @@ class NotFoundError < ApiError
       I18n.t("errors.not_found"),
       status: 404,
       code: :not_found
+    )
+  end
+end
+
+class MissingParameterError < ApiError
+  def initialize(param)
+    super(
+      I18n.t("errors.missing_parameter"),
+      status: 400,
+      code: :missing_parameter
+    )
+
+    @details = { param: param }
+  end
+
+  attr_reader :details
+end
+
+class InactiveUserError < ApiError
+  def initialize
+    super(
+      I18n.t("errors.user_inactive"),
+      status: 403,
+      code: :user_inactive
     )
   end
 end

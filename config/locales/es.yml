@@ -1,14 +1,24 @@
 es:
   errors:
+    user_inactive: "La cuenta de usuario está inactiva"
+    missing_parameter: "Faltan parametros requeridos"
+    validation_failed: "Hay errores de validación"
     not_found: "Recurso no encontrado"
+    dependency_violation: "No se puede eliminar el recurso porque tiene dependencias asociadas"
     authentication:
       invalid_credentials: "Credenciales inválidas"
     authorization:
       forbidden: "No tienes permisos para realizar esta acción"
     unauthorized: "No estás autorizado para realizar esta acción"
+    branch:
+      main_branch_manager_immutable: "No se puede cambiar el gerente de la sucursal principal"
+    user:
+      has_managed_branches: "No se puede eliminar el usuario porque administra una o más sucursales"
 
   activerecord:
     errors:
+      messages:
+        record_invalid: "La validación falló"
       models:
         user:
           attributes:

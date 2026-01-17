@@ -20,7 +20,6 @@ class User < ApplicationRecord
   validates :password_confirmation, presence: true, if: :password_being_set?
 
   belongs_to :store, optional: true
-  belongs_to :role, optional: true
 
   has_many :branch_users, dependent: :destroy
   has_many :branches, through: :branch_users
@@ -31,8 +30,27 @@ class User < ApplicationRecord
   has_many :created_items, class_name: "Item", foreign_key: :created_by_id
   has_many :updated_items, class_name: "Item", foreign_key: :updated_by_id
 
+  scope :active, -> { where(active: true) }
+  scope :inactive, -> { where(active: [false, nil]) }
+
+  scope :for_branch, ->(branch) {
+    joins(:branches).where(branches: { id: branch.id })
+  }
+
+
+  def super_admin?
+    role_for_main_branch&.name == "super_admin"
+  end
+
   def role_for(branch)
     branch_users.find_by(branch: branch)&.role
+  end
+
+  def role_for_main_branch
+    branch_users
+      .joins(:branch)
+      .find_by(branches: { is_main: true })
+      &.role
   end
 
   private

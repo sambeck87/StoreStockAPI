@@ -1,14 +1,24 @@
 en:
   errors:
+    user_inactive: "User account is inactive"
+    missing_parameter: "Required parameters are missing"
+    validation_failed: "There are validation errors"
     not_found: "Resource not found"
+    dependency_violation: "The resource cannot be deleted because it has associated dependencies"
     authentication:
       invalid_credentials: "Invalid credentials"
     authorization:
       forbidden: "You are not allowed to perform this action"
     unauthorized: "You are not authorized to perform this action"
+    branch:
+      main_branch_manager_immutable: "The manager of the main branch cannot be changed"
+    user:
+      has_managed_branches: "The user cannot be deleted because they manage one or more branches"
 
   activerecord:
     errors:
+      messages:
+        record_invalid: "Validation failed"
       models:
         user:
           attributes:

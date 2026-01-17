@@ -1,43 +1,33 @@
-class UserPolicy
-  def initialize(actor, record, branch:)
-    @actor = actor
-    @record = record
-    @branch = branch
-  end
-
+class UserPolicy < ApplicationPolicy
   def index?
-    role&.allows?(:user, :read)
+    allows?(:user, :index)
   end
 
   def show?
     return true if own_profile?
-    return false unless @branch
 
-    role&.allows?(:user, :read)
+    allows?(:user, :show)
   end
 
   def create?
-    role&.allows?(:user, :create)
+    allows?(:user, :create)
   end
 
   def update?
     return true if own_profile?
-    return false unless @branch
 
-    role&.allows?(:user, :update)
+    allows?(:user, :update)
   end
 
   def destroy?
-    role&.allows?(:user, :delete)
+    return true if own_profile?
+
+    allows?(:user, :delete)
   end
 
   private
 
   def own_profile?
-    @actor.id == @record.id
-  end
-
-  def role
-    @user.role_for(@branch)
+    record.is_a?(User) && actor.id == record.id
   end
 end

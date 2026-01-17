@@ -8,4 +8,5 @@ class Store < ApplicationRecord
 
   validates :name, presence: true
   validates :user, presence: true
+  validates :user_id, uniqueness: true
 end

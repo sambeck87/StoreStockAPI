@@ -96,7 +96,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_13_180759) do
     t.string "name", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
-    t.index ["user_id"], name: "index_stores_on_user_id"
+    t.index ["user_id"], name: "index_stores_on_user_id", unique: true
   end
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -105,11 +105,9 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_13_180759) do
     t.string "email", null: false
     t.string "full_name"
     t.string "password_digest", null: false
-    t.bigint "role_id"
     t.bigint "store_id"
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["role_id"], name: "index_users_on_role_id"
     t.index ["store_id"], name: "index_users_on_store_id"
   end
 
@@ -130,6 +128,5 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_13_180759) do
   add_foreign_key "items", "users", column: "updated_by_id"
   add_foreign_key "roles", "stores"
   add_foreign_key "stores", "users"
-  add_foreign_key "users", "roles"
   add_foreign_key "users", "stores"
 end

@@ -1,44 +1,59 @@
 class Api::V1::UsersController < ApplicationController
-  skip_before_action :authenticate_request!, only: :create
+  skip_before_action :ensure_active_user!, only: %i[show update destroy]
+  before_action :set_user, only: %i[show update destroy]
 
   def index
     authorize!(User)
-    users = User.all
 
-    render_serialized(users, with: :user, view: :full, status: :ok)
+    users = Users::IndexQuery.new(
+      current_user: current_user,
+      current_branch: current_branch,
+      current_store: current_store,
+      params: params
+    ).call
+
+    render_serialized(users, with: :user, view: :compact, status: :ok)
   end
 
   def show
-    user = find_resource(User)
+    authorize!(@user)
 
-    authorize!(user)
-
-    render_serialized(user, with: :user, view: :full, status: :ok)
-  end
-
-  def create
-    user = User.new(user_params)
-
-    user.save!
-
-    token = JsonWebToken.encode(user_id: user.id)
-
-    render_response({ user: user, token: token }, with: :session, status: :created)
-  rescue ActiveRecord::RecordInvalid => e
-    raise ValidationError.new(e.record)
+    render_serialized(@user, with: :user, view: :full, status: :ok)
   end
 
   def update
-    current_user.update!(user_params)
+    authorize!(@user)
+
+    Users::AssignStore.new(
+      user: @user,
+      store_id: user_params[:store_id]
+    ).call
+
+    @user.update!(user_params.except(:store_id))
+
+    render_serialized(@user, with: :user, view: :full)
   end
 
   def destroy
-    current_user.destroy!
+    authorize!(@user)
+
+    Users::EnsureDeletable.new(user: @user).call
+
+    @user.destroy!
+
+    head :no_content
   end
 
   private
+  def set_user
+    @user = Users::FindAccessible.new(
+      current_user: current_user,
+      current_branch: current_branch,
+      id: params[:id]
+    ).call
+  end
 
   def user_params
-    params.require(:user).permit(:email, :full_name, :password, :password_confirmation)
+    params.require(:user).permit(:email, :full_name, :store_id)
   end
 end
