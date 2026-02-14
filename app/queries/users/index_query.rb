@@ -1,8 +1,7 @@
 class Users::IndexQuery
-  def initialize(current_user:, current_branch:, current_store:, params:)
+  def initialize(current_user:, current_branch:, params:)
     @current_user   = current_user
     @current_branch = current_branch
-    @current_store  = current_store
     @params         = params
   end
 
@@ -16,9 +15,13 @@ class Users::IndexQuery
   private
 
   def base_scope
-    scope = User.where(store_id: @current_user.store_id)
+    scope = User
+      .where(store_id: @current_user.store_id)
+      .includes(
+        branch_users: :role
+      )
 
-    if @current_user.super_admin? and @current_user.store_id == @current_store&.id
+    if @current_user.super_admin?
       return @current_branch ? scope.for_branch(@current_branch) : scope
     end
 

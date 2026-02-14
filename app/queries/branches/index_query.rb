@@ -5,16 +5,17 @@ class Branches::IndexQuery
   end
 
   def call
+    return base_scope if @current_user.super_admin?
+
     base_scope
+      .joins(:branch_users)
+      .where(branch_users: { user_id: @current_user.id })
+      .distinct
   end
 
   private
 
   def base_scope
-    stores = @store.branches.where(store_id: @current_user.store_id)
-    return stores if @current_user.super_admin?
-
-    stores.joins(:branch_users)
-          .where(branch_users: { user_id: @current_user.id })
+    @store.branches
   end
 end

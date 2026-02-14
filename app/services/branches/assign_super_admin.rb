@@ -22,7 +22,7 @@ module Branches
         store: @branch.store,
         name: "super_admin"
       ) do |role|
-        role.permissions = Role::ALL_PERMISSIONS
+        role.permissions = {}
       end
     end
   end

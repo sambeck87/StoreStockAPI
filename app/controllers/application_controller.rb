@@ -44,12 +44,7 @@ class ApplicationController < ActionController::API
   def current_store
     return @current_store if defined?(@current_store)
 
-    @current_store =
-      if current_user.super_admin? && params[:store_id]
-        Store.find(params[:store_id])
-      else
-        current_user.store
-      end
+    @current_store = current_user.store
   end
 
   def authorize!(record)

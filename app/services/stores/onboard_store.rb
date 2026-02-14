@@ -13,6 +13,8 @@ class Stores::OnboardStore
 
       @user.update!(store: store, active: true)
 
+      GlobalPermissions::AssignGlobalPermissions.new(user: @user).call
+
       main_branch = Branches::CreateMainBranch.new(
         store: store,
         manager: @user

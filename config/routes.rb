@@ -4,10 +4,15 @@ Rails.application.routes.draw do
 
       resources :sessions, only: [:create]
       resource :registration, only: [:create]
+      resources :global_permissions
 
-      resources :users, only: [:show, :update, :destroy]
+      resources :users, only: [:index, :show, :update, :destroy]
+      resources :roles
+      resources :categories do
+        resources :items
+      end
 
-      resources :branches, only: [] do
+      resources :branches do
         resources :users, only: [:index, :show, :update, :destroy]
       end
 
@@ -15,16 +20,13 @@ Rails.application.routes.draw do
         resources :users, only: [] do
           member do
             patch :manage
+            delete "branches/:branch_id", to: "users#revoke_access"
           end
         end
       end
 
       resources :stores, only: [:index, :show, :create, :update, :destroy] do
         resources :users, only: [:index, :show, :update, :destroy]
-        resources :branches
-        resources :categories
-        resources :items
-        resources :roles
       end
     end
   end

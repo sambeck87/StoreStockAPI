@@ -8,11 +8,18 @@ class Api::V1::UsersController < ApplicationController
     users = Users::IndexQuery.new(
       current_user: current_user,
       current_branch: current_branch,
-      current_store: current_store,
       params: params
     ).call
 
-    render_serialized(users, with: :user, view: :compact, status: :ok)
+    render_serialized(
+      users,
+      with: :user,
+      view: :compact,
+      context: {
+        branch: current_branch
+      },
+      status: :ok
+    )
   end
 
   def show

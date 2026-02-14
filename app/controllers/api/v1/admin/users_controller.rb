@@ -1,12 +1,12 @@
 class Api::V1::Admin::UsersController < ApplicationController
-  def update
+  def manage
     user = Users::FindAccessible.new(
       current_user: current_user,
       current_branch: nil,
       id: params[:id]
     ).call
 
-    authorize!(user, :manage?)
+    authorize!(user)
 
     Users::Manage.new(
       actor: current_user,
@@ -14,12 +14,32 @@ class Api::V1::Admin::UsersController < ApplicationController
       params: manage_params
     ).call
 
-    render_serialized(user, with: :user, view: :full)
+    render_serialized(
+      user,
+      with: Api::V1::UserSerializer,
+      view: :full
+    )
+  end
+
+  def revoke_access
+    user = Users::FindAccessible.new(
+      current_user: current_user,
+      current_branch: nil,
+      id: params[:id]
+    ).call
+
+    branch_user = BranchUsers::FindAccessible.new(params: params).call
+
+    authorize!(branch_user)
+
+    branch_user.destroy!
+
+    head :no_content
   end
 
   private
 
   def manage_params
-    params.require(:user).permit(:active, :branch_id, :role_id)
+    params.require(:user).permit(:active, :branch_id, :role_id, :global_permission_id)
   end
 end

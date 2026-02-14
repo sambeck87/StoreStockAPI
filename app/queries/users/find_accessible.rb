@@ -12,7 +12,9 @@ class Users::FindAccessible
   private
 
   def base_scope
-    scope = User.where(store_id: @current_user.store_id)
+    scope = User
+      .where(store_id: @current_user.store_id)
+      .includes(:global_permission, branch_users: :role)
 
     return scope if @current_user.super_admin?
     return scope if @current_user.id == @id.to_i

@@ -34,3 +34,18 @@ en:
               confirmation: "doesn't match confirmation"
             full_name:
               blank: "can't be blank"
+        category:
+          attributes:
+            name:
+              blank: "can't be blank"
+              taken: "category already exists in this store"
+        role:
+          attributes:
+            name:
+              blank: "can't be blank"
+              taken: "role already exists in this store"
+        global_permission:
+          attributes:
+            name:
+              blank: "can't be blank"
+              taken: "global permission already exists in this store"

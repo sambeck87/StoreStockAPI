@@ -34,3 +34,18 @@ es:
               confirmation: "la contraseña no coincide con la confirmación"
             full_name:
               blank: "no puede estar vacío"
+        category:
+          attributes:
+            name:
+              blank: "no puede estar vacío"
+              taken: "la categoría ya existe en esta tienda"
+        role:
+          attributes:
+            name:
+              blank: "no puede estar vacío"
+              taken: "el rol ya existe en esta tienda"
+        global_permission:
+          attributes:
+            name:
+              blank: "no puede estar vacío"
+              taken: "el permiso global ya existe en esta tienda"

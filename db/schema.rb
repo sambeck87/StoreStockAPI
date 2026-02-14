@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_13_180759) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_12_211459) do
   create_table "branch_items", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "branch_id", null: false
     t.datetime "created_at", null: false
@@ -63,6 +63,15 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_13_180759) do
     t.index ["updated_by_id"], name: "index_categories_on_updated_by_id"
   end
 
+  create_table "global_permissions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name"
+    t.json "permissions"
+    t.bigint "store_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["store_id"], name: "index_global_permissions_on_store_id"
+  end
+
   create_table "items", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.boolean "active", default: true, null: false
     t.bigint "category_id", null: false
@@ -95,7 +104,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_13_180759) do
     t.datetime "created_at", null: false
     t.string "name", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.index ["user_id"], name: "index_stores_on_user_id", unique: true
   end
 
@@ -104,10 +113,12 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_13_180759) do
     t.datetime "created_at", null: false
     t.string "email", null: false
     t.string "full_name"
+    t.bigint "global_permission_id"
     t.string "password_digest", null: false
     t.bigint "store_id"
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["global_permission_id"], name: "index_users_on_global_permission_id"
     t.index ["store_id"], name: "index_users_on_store_id"
   end
 
@@ -122,11 +133,13 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_13_180759) do
   add_foreign_key "categories", "stores"
   add_foreign_key "categories", "users", column: "created_by_id"
   add_foreign_key "categories", "users", column: "updated_by_id"
+  add_foreign_key "global_permissions", "stores"
   add_foreign_key "items", "categories"
   add_foreign_key "items", "stores"
   add_foreign_key "items", "users", column: "created_by_id"
   add_foreign_key "items", "users", column: "updated_by_id"
   add_foreign_key "roles", "stores"
-  add_foreign_key "stores", "users"
-  add_foreign_key "users", "stores"
+  add_foreign_key "stores", "users", on_delete: :nullify
+  add_foreign_key "users", "global_permissions", on_delete: :nullify
+  add_foreign_key "users", "stores", on_delete: :nullify
 end

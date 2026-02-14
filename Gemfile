@@ -56,4 +56,6 @@ group :development, :test do
   gem "pry-nav"
 
   gem "pry-rails"
+
+  gem "bullet"
 end

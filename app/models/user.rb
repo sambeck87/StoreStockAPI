@@ -20,6 +20,7 @@ class User < ApplicationRecord
   validates :password_confirmation, presence: true, if: :password_being_set?
 
   belongs_to :store, optional: true
+  belongs_to :global_permission, optional: true
 
   has_many :branch_users, dependent: :destroy
   has_many :branches, through: :branch_users

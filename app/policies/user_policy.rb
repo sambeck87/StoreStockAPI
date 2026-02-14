@@ -25,6 +25,18 @@ class UserPolicy < ApplicationPolicy
     allows?(:user, :delete)
   end
 
+  def manage?
+    return false unless actor.super_admin?
+
+    allows?(:user, :manage)
+  end
+
+  def revoke_access?
+    return false unless actor.super_admin?
+
+    allows?(:user, :revoke_access)
+  end
+
   private
 
   def own_profile?
