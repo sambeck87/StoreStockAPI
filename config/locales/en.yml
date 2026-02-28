@@ -49,3 +49,11 @@ en:
             name:
               blank: "can't be blank"
               taken: "global permission already exists in this store"
+        item:
+          attributes:
+            name:
+              taken: "el rol ya existe en esta tienda"
+              blank: "can't be blank"
+            category:
+              blank: "can't be blank"
+              required: "can't be blank"

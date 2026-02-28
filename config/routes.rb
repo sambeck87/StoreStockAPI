@@ -8,12 +8,10 @@ Rails.application.routes.draw do
 
       resources :users, only: [:index, :show, :update, :destroy]
       resources :roles
-      resources :categories do
-        resources :items
-      end
 
       resources :branches do
         resources :users, only: [:index, :show, :update, :destroy]
+        resources :items
       end
 
       namespace :admin do
