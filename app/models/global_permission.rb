@@ -5,13 +5,12 @@ class GlobalPermission < ApplicationRecord
   validates :permissions, presence: true
 
   ALL_PERMISSIONS = {
-                      user:              %i[index show create update delete manage revoke_access],
+                      user:              %i[index show create update delete manage revoke_access detach_store],
                       store:             %i[index show create update delete],
                       branch:            %i[index show create update delete],
                       category:          %i[index show create update delete],
                       item:              %i[index show create update delete],
                       role:              %i[index show create update delete],
-                      permission:        %i[index show create update delete],
                       global_permission: %i[index show create update delete]
                     }.freeze
 

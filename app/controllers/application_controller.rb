@@ -21,7 +21,7 @@ class ApplicationController < ActionController::API
     decoded = JsonWebToken.decode(token)
     raise UnauthorizedError if decoded.blank?
 
-    @current_user = User.find(decoded[:user_id])
+    @current_user = User.includes(:global_permission, branch_users: [ :role, :branch ]).find(decoded[:user_id])
   rescue ActiveRecord::RecordNotFound,
          JWT::DecodeError,
          JWT::ExpiredSignature
@@ -29,8 +29,8 @@ class ApplicationController < ActionController::API
   end
 
   def set_locale
-    I18n.locale =
-      request.headers["Accept-Language"]&.to_sym || I18n.default_locale
+    locale = request.headers["Accept-Language"]&.split(",")&.first&.strip&.split("-")&.first
+    I18n.locale = locale.present? && I18n.available_locales.include?(locale.to_sym) ? locale.to_sym : I18n.default_locale
   end
 
   def current_branch

@@ -36,9 +36,10 @@ module Items
 
     def find_category!
       return @current_category if @current_category.present?
-      return @user.store.categories.find(@params[:category_id]) if @params[:category_id].present?
+      category = @user.store.categories.find_by(id: @params[:category_id]) if @params[:category_id].present?
+      raise NotFoundError.new unless category
 
-      raise NotFoundError.new
+      category
     end
 
     def find_or_create_item!(category)
@@ -61,7 +62,7 @@ module Items
 
     def resolve_branch
       return @current_branch if @current_branch.present?
-      return @user.store.branches.find(@params[:branch_id]) if @params[:branch_id].present? && @user.global_permission.present?
+      return @user.branches.find(@params[:branch_id]) if @params[:branch_id].present?
 
       @user.branches.first!
     end

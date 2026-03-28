@@ -6,7 +6,10 @@ class Api::V1::SessionResponse
 
   def as_json(*)
     {
-      email: @user.email,
+      user: {
+        id: @user.id,
+        email: @user.email
+      },
       token: @token,
       expires_in: 24.hours.to_i
     }

@@ -97,3 +97,13 @@ class InactiveUserError < ApiError
     )
   end
 end
+
+class UnconfirmedEmailError < ApiError
+  def initialize
+    super(
+      I18n.t("errors.unconfirmed_email"),
+      status: 401,
+      code: :unconfirmed_email
+    )
+  end
+end

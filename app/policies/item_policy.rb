@@ -5,7 +5,6 @@ class ItemPolicy < ApplicationPolicy
 
   def show?
     return false unless same_store?
-    return true if actor.global_permission.present?
 
     accessible_branch_ids = actor.branch_ids
     record.branches.exists?(id: accessible_branch_ids)
@@ -19,18 +18,18 @@ class ItemPolicy < ApplicationPolicy
 
   def update?
     return false unless same_store?
-    return true if actor.global_permission.present?
 
     accessible_branch_ids = actor.branch_ids
     record.branches.exists?(id: accessible_branch_ids)
+    allows?(:item, :update)
   end
 
   def destroy?
     return false unless same_store?
-    return true if actor.global_permission.present?
 
     accessible_branch_ids = actor.branch_ids
     record.branches.exists?(id: accessible_branch_ids)
+    allows?(:item, :destroy)
   end
 
   private

@@ -28,13 +28,19 @@ class UserPolicy < ApplicationPolicy
   def manage?
     return false unless actor.super_admin?
 
-    allows?(:user, :manage)
+    true
   end
 
   def revoke_access?
     return false unless actor.super_admin?
 
-    allows?(:user, :revoke_access)
+    true
+  end
+
+  def detach_store?
+    return false unless actor.super_admin?
+
+    true
   end
 
   private

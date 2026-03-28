@@ -1,4 +1,6 @@
 class Api::V1::Admin::UsersController < ApplicationController
+  wrap_parameters :user, include: %i[active branch_id role_id global_permission_id]
+
   def manage
     user = Users::FindAccessible.new(
       current_user: current_user,
@@ -33,6 +35,23 @@ class Api::V1::Admin::UsersController < ApplicationController
     authorize!(branch_user)
 
     branch_user.destroy!
+
+    head :no_content
+  end
+
+  def detach_store
+    user = Users::FindAccessible.new(
+      current_user: current_user,
+      current_branch: nil,
+      id: params[:id]
+    ).call
+
+    authorize!(user)
+
+    Users::DetachStore.new(
+      actor: current_user,
+      user: user
+    ).call
 
     head :no_content
   end

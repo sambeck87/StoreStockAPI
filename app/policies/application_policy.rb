@@ -19,9 +19,13 @@ class ApplicationPolicy
   end
 
   def allows?(resource, action)
-    return true if global_allows?(resource, action)
+    global_result = global_allows?(resource, action)
+    return true if global_result
 
-    role&.allows?(resource, action) || false
+    role_result = role&.allows?(resource, action)
+    return true if role_result
+
+    false
   end
 
   def global_allows?(resource, action)

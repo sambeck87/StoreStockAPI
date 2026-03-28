@@ -1,6 +1,7 @@
 en:
   errors:
     user_inactive: "User account is inactive"
+    unconfirmed_email: "Please confirm your email to sign in"
     missing_parameter: "Required parameters are missing"
     validation_failed: "There are validation errors"
     not_found: "Resource not found"
@@ -15,7 +16,13 @@ en:
     user:
       has_managed_branches: "The user cannot be deleted because they manage one or more branches"
 
-  activerecord:
+  confirmation_mailer:
+    confirmation:
+      subject: "Confirm your account"
+
+  registrations:
+    create:
+      success: "Account created. Please check your email to activate your account."
     errors:
       messages:
         record_invalid: "Validation failed"

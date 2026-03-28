@@ -3,12 +3,6 @@ class GlobalPermissionPolicy < ApplicationPolicy
     allows?(:global_permission, :index)
   end
 
-  def show?
-    return false unless same_store?
-
-    allows?(:global_permission, :show)
-  end
-
   def create?
     return false unless same_store? && actor.super_admin?
 

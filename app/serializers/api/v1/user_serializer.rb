@@ -21,13 +21,19 @@ class Api::V1::UserSerializer < BaseSerializer
       email: @user.email,
       full_name: @user.full_name,
       store_id: @user.store_id,
-      global_permission: @user.global_permission&.name,
+      global_permission: serialized_global_permission,
       branches: branches_with_roles,
       active: @user.active
     }
   end
 
   private
+
+  def serialized_global_permission
+    return nil unless @user.global_permission
+
+    Api::V1::GlobalPermissionSerializer.new(@user.global_permission).compact
+  end
 
   def branches_with_roles
     @user.branch_users.includes(:branch, :role).map do |branch_user|

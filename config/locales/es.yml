@@ -1,6 +1,7 @@
 es:
   errors:
     user_inactive: "La cuenta de usuario está inactiva"
+    unconfirmed_email: "Por favor verifica tu correo electrónico para iniciar sesión"
     missing_parameter: "Faltan parametros requeridos"
     validation_failed: "Hay errores de validación"
     not_found: "Recurso no encontrado"
@@ -16,6 +17,18 @@ es:
       has_managed_branches: "No se puede eliminar el usuario porque administra una o más sucursales"
     item:
       already_exists_in_branch: "El elemento ya existe en esta sucursal"
+
+  passwords_mailer:
+    reset:
+      subject: "Restablecer tu contraseña"
+
+  confirmation_mailer:
+    confirmation:
+      subject: "Confirma tu cuenta"
+
+  registrations:
+    create:
+      success: "Cuenta creada. Por favor verifica tu correo electrónico para activar tu cuenta."
 
   activerecord:
     errors:

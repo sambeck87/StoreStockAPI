@@ -1,4 +1,6 @@
 class Api::V1::ItemsController < ApplicationController
+  wrap_parameters :item, include: %i[name measure cost active category_id branch_id current_quantity minimum_quantity]
+
   before_action :set_item, only: %i[show update destroy]
   before_action :set_category, only: %i[create]
 
@@ -56,7 +58,14 @@ class Api::V1::ItemsController < ApplicationController
   def update
     authorize!(@item)
 
-    @item.update!(item_params.merge(updated_by: current_user))
+    ActiveRecord::Base.transaction do
+      Items::UpdateItem.new(
+        item: @item,
+        user: current_user,
+        item_params: item_params,
+        branch_id: params[:branch_id]
+      ).call
+    end
 
     render_serialized(
       @item,
@@ -97,6 +106,6 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def item_params
-    params.require(:item).permit(:name, :measure, :cost, :active, :category_id, :current_quantity, :minimum_quantity)
+    params.require(:item).permit(:name, :measure, :cost, :active, :category_id, :branch_id, :current_quantity, :minimum_quantity)
   end
 end

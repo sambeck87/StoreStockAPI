@@ -1,8 +1,4 @@
 class BranchPolicy < ApplicationPolicy
-  def index?
-    allows?(:branch, :index)
-  end
-
   def show?
     return false unless record.users.exists?(actor.id)
 

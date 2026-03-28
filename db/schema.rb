@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_12_211459) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_09_213234) do
   create_table "branch_items", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "branch_id", null: false
     t.datetime "created_at", null: false
@@ -110,11 +110,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_12_211459) do
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.boolean "active"
+    t.datetime "confirmation_sent_at"
+    t.string "confirmation_token"
     t.datetime "created_at", null: false
     t.string "email", null: false
     t.string "full_name"
     t.bigint "global_permission_id"
     t.string "password_digest", null: false
+    t.datetime "reset_password_sent_at"
+    t.string "reset_password_token"
     t.bigint "store_id"
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true

@@ -8,12 +8,13 @@ class Api::V1::RolesController < ApplicationController
       current_user: current_user,
     ).call
 
-    render_serialized( roles )
+    render_serialized(
+      roles,
+      view: :full
+      )
   end
 
   def show
-    authorize!(@role)
-
     render_serialized(
       @role,
       view: :full
