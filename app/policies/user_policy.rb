@@ -1,6 +1,9 @@
 class UserPolicy < ApplicationPolicy
   def index?
-    allows?(:user, :index)
+    allows?(:user, :index) ||
+    allows?(:user, :create) ||
+    allows?(:user, :update) ||
+    allows?(:user, :delete)
   end
 
   def show?

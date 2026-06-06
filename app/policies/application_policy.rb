@@ -19,13 +19,21 @@ class ApplicationPolicy
   end
 
   def allows?(resource, action)
-    global_result = global_allows?(resource, action)
-    return true if global_result
+    return true if global_allows?(resource, action)
 
-    role_result = role&.allows?(resource, action)
-    return true if role_result
+    return true if role&.allows?(resource, action)
+
+    return true if branchless_allows?(resource, action)
 
     false
+  end
+
+  def branchless_allows?(resource, action)
+    return false unless branch.nil?
+    return false if actor.super_admin?
+
+    accessible_branch_ids = actor.branch_ids_with_permission(resource, action)
+    accessible_branch_ids.any?
   end
 
   def global_allows?(resource, action)

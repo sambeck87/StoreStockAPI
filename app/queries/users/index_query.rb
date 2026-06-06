@@ -17,17 +17,25 @@ class Users::IndexQuery
   def base_scope
     scope = User
       .where(store_id: @current_user.store_id)
-      .includes(
-        branch_users: :role
-      )
+      .includes(branch_users: :role)
 
-    if @current_user.super_admin?
-      return @current_branch ? scope.for_branch(@current_branch) : scope
+    if @current_user.has_global_permission?(:user, :index)
+      if @params[:branch_id].present?
+        return scope.for_branch_id(@params[:branch_id].to_i)
+      end
+      return scope
     end
 
-    return User.none unless @current_branch
+    accessible_branch_ids = @current_user.branch_ids_with_permission(:user, :index)
+    return User.none if accessible_branch_ids.empty?
 
-    scope.for_branch(@current_branch)
+    if @params[:branch_id].present?
+      branch_id = @params[:branch_id].to_i
+      return User.none unless accessible_branch_ids.include?(branch_id)
+      return scope.for_branch_id(branch_id)
+    end
+
+    scope.for_branches(accessible_branch_ids)
   end
 
   def apply_filters(scope)

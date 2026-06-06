@@ -22,6 +22,8 @@ class User < ApplicationRecord
   belongs_to :store, optional: true
   belongs_to :global_permission, optional: true
 
+  attribute :confirmed_at, :datetime, default: nil
+
   has_many :branch_users, dependent: :destroy
   has_many :branches, through: :branch_users
 
@@ -32,15 +34,34 @@ class User < ApplicationRecord
   has_many :updated_items, class_name: "Item", foreign_key: :updated_by_id
 
   scope :active, -> { where(active: true) }
-  scope :inactive, -> { where(active: [false, nil]) }
+  scope :inactive, -> { where(active: [ false, nil ]) }
 
   scope :for_branch, ->(branch) {
     joins(:branches).where(branches: { id: branch.id })
   }
 
+  scope :for_branch_id, ->(branch_id) {
+    joins(:branches).where(branches: { id: branch_id })
+  }
+
+  scope :for_branches, ->(branch_ids) {
+    joins(:branches).where(branches: { id: branch_ids }).distinct
+  }
+
 
   def super_admin?
     role_for_main_branch&.name == "super_admin"
+  end
+
+  def has_global_permission?(resource, action)
+    global_permission&.allows?(resource, action) || false
+  end
+
+  def branch_ids_with_permission(resource, action)
+    branch_users
+      .joins(:role)
+      .where("JSON_CONTAINS(roles.permissions, ?, '$.#{resource}')", "\"#{action}\"")
+      .pluck(:branch_id)
   end
 
   def role_for(branch)

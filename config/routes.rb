@@ -3,6 +3,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :sessions, only: [ :create ]
       resource :registration, only: [ :create ]
+      resources :confirmations, only: [ :update ]
       resources :global_permissions
       resource :passwords, only: [] do
         collection do

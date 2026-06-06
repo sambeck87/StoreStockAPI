@@ -6,6 +6,8 @@ class Users::FindAccessible
   end
 
   def call
+    return User.find(@id) if @current_user.id == @id.to_i
+
     base_scope.find(@id)
   end
 

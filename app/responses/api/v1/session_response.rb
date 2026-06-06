@@ -8,7 +8,8 @@ class Api::V1::SessionResponse
     {
       user: {
         id: @user.id,
-        email: @user.email
+        email: @user.email,
+        store_id: @user.store_id
       },
       token: @token,
       expires_in: 24.hours.to_i

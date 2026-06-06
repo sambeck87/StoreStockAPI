@@ -29,7 +29,7 @@ class ItemPolicy < ApplicationPolicy
 
     accessible_branch_ids = actor.branch_ids
     record.branches.exists?(id: accessible_branch_ids)
-    allows?(:item, :destroy)
+    allows?(:item, :delete)
   end
 
   private

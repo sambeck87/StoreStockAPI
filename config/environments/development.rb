@@ -1,5 +1,7 @@
 require "active_support/core_ext/integer/time"
 
+ENV["SSL_CERT_FILE"] ||= "/etc/ssl/certs/ca-certificates.crt"
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -40,15 +42,7 @@ Rails.application.configure do
 
   # Use letter opener in development
   # config.action_mailer.delivery_method = :letter_opener
-  config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = {
-    address: "smtp.resend.email",
-    port: 587,
-    user_name: "resend",
-    password: ENV.fetch("RESEND_API_KEY"),
-    authentication: "plain",
-    enable_starttls_auto: true
-  }
+  config.action_mailer.delivery_method = :resend
   config.action_mailer.perform_deliveries = true
 
   # Print deprecation notices to the Rails logger.

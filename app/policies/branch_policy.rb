@@ -22,7 +22,7 @@ class BranchPolicy < ApplicationPolicy
     return false unless actor.super_admin?
     return false unless owns_store?
 
-    allows?(:branch, :destroy)
+    allows?(:branch, :delete)
   end
 
   def owns_store?

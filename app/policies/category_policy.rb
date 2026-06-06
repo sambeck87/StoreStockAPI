@@ -1,6 +1,9 @@
 class CategoryPolicy < ApplicationPolicy
   def index?
-    allows?(:category, :index)
+    allows?(:category, :index) ||
+    allows?(:category, :create) ||
+    allows?(:category, :update) ||
+    allows?(:category, :delete)
   end
 
   def show?
