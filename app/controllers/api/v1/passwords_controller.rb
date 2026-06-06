@@ -33,7 +33,8 @@ class Api::V1::PasswordsController < ApplicationController
 
     user.update!(
       confirmation_token: nil,
-      confirmation_sent_at: nil
+      confirmation_sent_at: nil,
+      confirmed_at: Time.current
     )
 
     token = JsonWebToken.encode(user_id: user.id)
