@@ -51,7 +51,7 @@ class ApplicationController < ActionController::API
     policy = policy_for(record)
     action = "#{action_name}?"
 
-    raise UnauthorizedError unless policy.public_send(action)
+    raise AuthorizationError unless policy.public_send(action)
   end
 
   def policy_for(record)

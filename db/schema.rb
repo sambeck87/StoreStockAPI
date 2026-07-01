@@ -10,8 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_18_173255) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_25_151930) do
   create_table "branch_items", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
     t.bigint "branch_id", null: false
     t.datetime "created_at", null: false
     t.integer "current_quantity"

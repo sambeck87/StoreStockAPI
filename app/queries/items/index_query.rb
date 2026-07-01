@@ -22,9 +22,13 @@ class Items::IndexQuery
     if @params[:branch_id].present?
       scope = scope.joins(:branch_items)
                    .where(branch_items: { branch_id: @params[:branch_id] })
-    end
 
-    scope = scope.where(active: @params[:active]) if @params[:active].present?
+      if @params[:active].present?
+        scope = scope.where(branch_items: { active: @params[:active] })
+      end
+    elsif @params[:active].present?
+      scope = scope.where(active: @params[:active])
+    end
 
     scope
   end

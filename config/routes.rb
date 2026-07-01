@@ -38,6 +38,8 @@ Rails.application.routes.draw do
       resources :stores, only: [ :index, :show, :create, :update, :destroy ] do
         resources :users, only: [ :index, :show, :update, :destroy ]
       end
+
+      get 'inventory', to: 'inventory#index'
     end
   end
 

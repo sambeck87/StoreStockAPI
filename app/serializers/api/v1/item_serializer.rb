@@ -10,7 +10,7 @@ class Api::V1::ItemSerializer < BaseSerializer
       name: @item.name,
       measure: @item.measure,
       cost: @item.cost.to_f,
-      active: @item.active,
+      active: branch_item&.active.nil? ? @item.active : branch_item.active,
       current_quantity: branch_item&.current_quantity,
       minimum_quantity: branch_item&.minimum_quantity
     }
@@ -22,7 +22,7 @@ class Api::V1::ItemSerializer < BaseSerializer
       name: @item.name,
       measure: @item.measure,
       cost: @item.cost.to_f,
-      active: @item.active,
+      active: branch_item&.active.nil? ? @item.active : branch_item.active,
       category_id: @item.category_id,
       updated_by: @item.updated_by&.full_name,
       created_by: @item.created_by&.full_name,

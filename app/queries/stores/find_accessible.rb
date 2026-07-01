@@ -18,10 +18,13 @@ class Stores::FindAccessible
   end
 
   def filter_by_id(scope)
+    return scope unless @params[:id].present?
 
-    return scope unless @params[:id].present? and @current_user.super_admin?
-
-    scope.where(id: @params[:id], user_id: @current_user.id)
+    if @current_user.super_admin?
+      scope.where(id: @params[:id])
+    else
+      scope.where(id: @params[:id], user_id: @current_user.id)
+    end
   end
 
   def apply_filters(scope)
