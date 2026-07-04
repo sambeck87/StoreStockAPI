@@ -40,6 +40,14 @@ Rails.application.routes.draw do
       end
 
       get 'inventory', to: 'inventory#index'
+
+      namespace :inventory do
+        resources :exports, only: [ :create, :show ] do
+          member do
+            get :download
+          end
+        end
+      end
     end
   end
 

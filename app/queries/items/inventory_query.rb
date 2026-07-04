@@ -13,7 +13,7 @@ class Items::InventoryQuery
 
     scope = scope.where(category_id: @params[:category_id]) if @params[:category_id].present?
 
-    if @params[:active].present?
+    if @params[:active].present? && @params[:active] != 'all'
       scope = scope.where(branch_items: { active: @params[:active] })
     end
 
@@ -49,10 +49,10 @@ class Items::InventoryQuery
                  )
                  .order(
                    Arel.sql(
-                     "inventory_branch_name ASC, " \
+                     "branches.name ASC, " \
                      "CASE " \
-                     "  WHEN COALESCE(inventory_quantity, 0) <= 0 THEN 0 " \
-                     "  WHEN inventory_quantity < COALESCE(inventory_minimum, 0) THEN 1 " \
+                     "  WHEN COALESCE(branch_items.current_quantity, 0) <= 0 THEN 0 " \
+                     "  WHEN branch_items.current_quantity < COALESCE(branch_items.minimum_quantity, 0) THEN 1 " \
                      "  ELSE 2 " \
                      "END ASC, " \
                      "items.name ASC"

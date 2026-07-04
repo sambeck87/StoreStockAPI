@@ -10,8 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_25_151930) do
-  create_table "branch_items", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+ActiveRecord::Schema[8.1].define(version: 2026_07_03_120000) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_catalog.plpgsql"
+
+  create_table "branch_items", force: :cascade do |t|
     t.boolean "active", default: true, null: false
     t.bigint "branch_id", null: false
     t.datetime "created_at", null: false
@@ -25,7 +28,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_25_151930) do
     t.index ["updated_by_id"], name: "index_branch_items_on_updated_by_id"
   end
 
-  create_table "branch_users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "branch_users", force: :cascade do |t|
     t.bigint "branch_id", null: false
     t.datetime "created_at", null: false
     t.bigint "role_id", null: false
@@ -36,7 +39,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_25_151930) do
     t.index ["user_id"], name: "index_branch_users_on_user_id"
   end
 
-  create_table "branches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "branches", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.boolean "is_main"
     t.bigint "manager_id"
@@ -50,7 +53,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_25_151930) do
     t.index ["store_id"], name: "index_branches_on_store_id"
   end
 
-  create_table "categories", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "categories", force: :cascade do |t|
     t.boolean "active", default: true, null: false
     t.datetime "created_at", null: false
     t.bigint "created_by_id"
@@ -64,7 +67,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_25_151930) do
     t.index ["updated_by_id"], name: "index_categories_on_updated_by_id"
   end
 
-  create_table "global_permissions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "global_permissions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name"
     t.json "permissions"
@@ -73,7 +76,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_25_151930) do
     t.index ["store_id"], name: "index_global_permissions_on_store_id"
   end
 
-  create_table "items", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "inventory_exports", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "error_message"
+    t.json "filters"
+    t.string "status", default: "pending", null: false
+    t.bigint "store_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["store_id"], name: "index_inventory_exports_on_store_id"
+    t.index ["user_id"], name: "index_inventory_exports_on_user_id"
+  end
+
+  create_table "items", force: :cascade do |t|
     t.boolean "active", default: true, null: false
     t.bigint "category_id", null: false
     t.decimal "cost", precision: 12, scale: 2
@@ -91,7 +106,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_25_151930) do
     t.index ["updated_by_id"], name: "index_items_on_updated_by_id"
   end
 
-  create_table "roles", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "job_queue", force: :cascade do |t|
+    t.text "args"
+    t.datetime "created_at", null: false
+    t.string "error_message"
+    t.string "job_type", null: false
+    t.datetime "scheduled_at"
+    t.string "status", default: "pending", null: false
+    t.datetime "updated_at", null: false
+    t.index ["status", "job_type", "created_at"], name: "index_job_queue_on_status_job_type_created_at"
+  end
+
+  create_table "roles", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name", null: false
     t.json "permissions"
@@ -101,7 +127,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_25_151930) do
     t.index ["store_id"], name: "index_roles_on_store_id"
   end
 
-  create_table "stores", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "stores", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name", null: false
     t.datetime "updated_at", null: false
@@ -109,7 +135,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_25_151930) do
     t.index ["user_id"], name: "index_stores_on_user_id", unique: true
   end
 
-  create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
     t.boolean "active"
     t.datetime "confirmation_sent_at"
     t.string "confirmation_token"
@@ -140,6 +166,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_25_151930) do
   add_foreign_key "categories", "users", column: "created_by_id"
   add_foreign_key "categories", "users", column: "updated_by_id"
   add_foreign_key "global_permissions", "stores"
+  add_foreign_key "inventory_exports", "stores"
+  add_foreign_key "inventory_exports", "users"
   add_foreign_key "items", "categories"
   add_foreign_key "items", "stores"
   add_foreign_key "items", "users", column: "created_by_id"
