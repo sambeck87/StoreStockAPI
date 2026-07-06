@@ -12,7 +12,7 @@ class Branches::FindAccessible
   private
 
   def base_scope
-    scope = @store.branches
+    scope = @store.branches.includes(:manager)
 
     return scope if @current_user.super_admin?
 

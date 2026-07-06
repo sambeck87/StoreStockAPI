@@ -14,7 +14,7 @@ class Stores::FindAccessible
   private
 
   def base_scope
-    Store.all
+    Store.all.includes(:user)
   end
 
   def filter_by_id(scope)

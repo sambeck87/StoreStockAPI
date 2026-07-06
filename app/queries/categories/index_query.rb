@@ -14,6 +14,7 @@ class Categories::IndexQuery
 
   def base_scope
     Category.where(store_id: @current_user.store_id)
+             .includes(:updated_by, :created_by)
   end
 
   def apply_filters(scope)

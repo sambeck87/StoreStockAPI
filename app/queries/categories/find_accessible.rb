@@ -12,5 +12,6 @@ class Categories::FindAccessible
 
   def base_scope
     Category.where(store_id: @current_user.store_id)
+             .includes(:updated_by, :created_by)
   end
 end

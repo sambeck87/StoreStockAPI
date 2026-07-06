@@ -39,7 +39,7 @@ class Api::V1::ItemSerializer < BaseSerializer
     return @branch_item if defined?(@branch_item)
 
     @branch_item = if @current_branch.present?
-                     @item.branch_items.find_by(branch_id: @current_branch.id)
+                     @item.branch_items.detect { |bi| bi.branch_id == @current_branch.id }
     else
                      @item.branch_items.first
     end
