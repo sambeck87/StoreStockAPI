@@ -1,19 +1,23 @@
 class Api::V1::InventoryController < ApplicationController
+  include Paginatable
+
   def index
     authorize!(Item)
 
-    items = Items::InventoryQuery.new(
+    scope = Items::InventoryQuery.new(
       current_user: current_user,
       params: index_params
     ).call
 
-    render json: { items: build_rows(items) }, status: :ok
+    records, meta = paginate(scope, **pagination_params)
+
+    render json: { items: build_rows(records), meta: meta }, status: :ok
   end
 
   private
 
   def index_params
-    params.permit(:branch_id, :category_id, :active, :quantity_status)
+    params.permit(:branch_id, :category_id, :active, :quantity_status, :page, :per_page)
   end
 
   def build_rows(items)

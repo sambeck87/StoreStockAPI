@@ -5,8 +5,9 @@ class Categories::IndexQuery
   end
 
   def call
-    base_scope
-    apply_filters(base_scope)
+    scope = base_scope
+    scope = apply_filters(scope)
+    scope.order(:name)
   end
 
   private
@@ -17,7 +18,6 @@ class Categories::IndexQuery
 
   def apply_filters(scope)
     scope = scope.by_name(@params[:name]) if @params[:name].present?
-
     scope
   end
 end

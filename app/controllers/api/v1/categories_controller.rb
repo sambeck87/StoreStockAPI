@@ -1,17 +1,22 @@
 class Api::V1::CategoriesController < ApplicationController
+  include Paginatable
+
   before_action :set_category, only: %i[show update destroy]
 
   def index
     authorize!(Category)
 
-    categories = Categories::IndexQuery.new(
+    scope = Categories::IndexQuery.new(
       current_user: current_user,
       current_branch: current_branch,
       params: params
     ).call
 
-    render_serialized(
-      categories,
+    records, meta = paginate(scope, **pagination_params)
+
+    render_paginated(
+      records,
+      meta: meta,
       with: :category,
       view: :compact,
       status: :ok

@@ -34,6 +34,8 @@ es:
     errors:
       messages:
         record_invalid: "La validación falló"
+        restrict_dependent_destroy:
+          has_many: "No se puede eliminar el registro porque tiene %{record} dependientes"
       models:
         user:
           attributes:
@@ -54,6 +56,9 @@ es:
             name:
               blank: "no puede estar vacío"
               taken: "la categoría ya existe en esta tienda"
+            base:
+              restrict_dependent_destroy:
+                has_many: "No se puede eliminar la categoría porque tiene %{record} asociados"
         role:
           attributes:
             name:

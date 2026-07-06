@@ -12,7 +12,8 @@ class Api::V1::ItemSerializer < BaseSerializer
       cost: @item.cost.to_f,
       active: branch_item&.active.nil? ? @item.active : branch_item.active,
       current_quantity: branch_item&.current_quantity,
-      minimum_quantity: branch_item&.minimum_quantity
+      minimum_quantity: branch_item&.minimum_quantity,
+      quantity_status: computed_quantity_status
     }
   end
 
@@ -27,7 +28,8 @@ class Api::V1::ItemSerializer < BaseSerializer
       updated_by: @item.updated_by&.full_name,
       created_by: @item.created_by&.full_name,
       current_quantity: branch_item&.current_quantity,
-      minimum_quantity: branch_item&.minimum_quantity
+      minimum_quantity: branch_item&.minimum_quantity,
+      quantity_status: computed_quantity_status
     }
   end
 
@@ -40,6 +42,19 @@ class Api::V1::ItemSerializer < BaseSerializer
                      @item.branch_items.find_by(branch_id: @current_branch.id)
     else
                      @item.branch_items.first
+    end
+  end
+
+  def computed_quantity_status
+    quantity = branch_item&.current_quantity
+    minimum = branch_item&.minimum_quantity
+
+    return "empty" if quantity.nil? || quantity <= 0
+
+    if minimum.present? && quantity < minimum
+      "low"
+    else
+      "complete"
     end
   end
 end

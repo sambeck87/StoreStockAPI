@@ -1,4 +1,6 @@
 class Api::V1::ItemsController < ApplicationController
+  include Paginatable
+
   wrap_parameters :item, include: %i[name measure cost active category_id branch_id current_quantity minimum_quantity]
 
   before_action :set_item, only: %i[show update destroy]
@@ -7,14 +9,17 @@ class Api::V1::ItemsController < ApplicationController
   def index
     authorize!(Item)
 
-    items = Items::IndexQuery.new(
+    scope = Items::IndexQuery.new(
       current_user: current_user,
       current_branch: current_branch,
       params: index_params
     ).call
 
-    render_serialized(
-      items,
+    records, meta = paginate(scope, **pagination_params)
+
+    render_paginated(
+      records,
+      meta: meta,
       with: :item,
       view: :compact,
       current_branch: current_branch,
@@ -102,7 +107,7 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def index_params
-    params.permit(:category_id, :branch_id, :active)
+    params.permit(:category_id, :branch_id, :active, :page, :per_page)
   end
 
   def item_params

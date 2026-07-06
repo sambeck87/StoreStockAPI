@@ -21,6 +21,7 @@ class Items::IndexQuery
 
     if @params[:branch_id].present?
       scope = scope.joins(:branch_items)
+                   .includes(:branch_items)
                    .where(branch_items: { branch_id: @params[:branch_id] })
 
       if @params[:active].present?
@@ -30,6 +31,6 @@ class Items::IndexQuery
       scope = scope.where(active: @params[:active])
     end
 
-    scope
+    scope.order(:name)
   end
 end
