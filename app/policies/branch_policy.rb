@@ -1,6 +1,6 @@
 class BranchPolicy < ApplicationPolicy
   def show?
-    return false unless record.users.exists?(actor.id)
+    return false unless record.branch_users.any? { |bu| bu.user_id == actor.id }
 
     allows?(:branch, :show)
   end

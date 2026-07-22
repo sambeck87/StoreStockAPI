@@ -65,7 +65,7 @@ class Items::InventoryQuery
   private
 
   def accessible_branch_ids
-    all_accessible = @current_user.branch_users.pluck(:branch_id)
+    all_accessible = @current_user.branch_users.map(&:branch_id)
     return [] if all_accessible.empty?
 
     if @params[:branch_id].present?

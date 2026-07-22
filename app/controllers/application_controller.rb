@@ -38,7 +38,8 @@ class ApplicationController < ActionController::API
 
     return @current_branch = nil unless params[:branch_id]
 
-    @current_branch = current_store.branches.find(params[:branch_id])
+    @current_branch = current_user.branch_users.find { |bu| bu.branch_id == params[:branch_id].to_i }&.branch
+    @current_branch ||= current_store.branches.find(params[:branch_id])
   end
 
   def current_store

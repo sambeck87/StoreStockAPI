@@ -11,11 +11,21 @@ class ApplicationPolicy
 
   def role
     @role ||= begin
-      return actor.role_for_main_branch if actor.super_admin?
+      return actor_role_for_main_branch if actor.super_admin?
       return nil unless branch.present?
 
-      actor.role_for(branch)
+      actor_role_for_branch
     end
+  end
+
+  def actor_role_for_main_branch
+    main_bu = actor.branch_users.detect { |bu| bu.branch&.is_main }
+    main_bu&.role
+  end
+
+  def actor_role_for_branch
+    bu = actor.branch_users.detect { |b| b.branch_id == branch&.id }
+    bu&.role
   end
 
   def allows?(resource, action)

@@ -14,6 +14,7 @@ class Items::IndexQuery
 
   def base_scope
     Item.where(store_id: @current_user.store_id)
+        .includes(:category, :branch_items)
   end
 
   def apply_filters(scope)
@@ -21,7 +22,6 @@ class Items::IndexQuery
 
     if @params[:branch_id].present?
       scope = scope.joins(:branch_items)
-                   .includes(:branch_items)
                    .where(branch_items: { branch_id: @params[:branch_id] })
 
       if @params[:active].present?

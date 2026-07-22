@@ -36,7 +36,8 @@ class Api::V1::UserSerializer < BaseSerializer
   end
 
   def branches_with_roles
-    @user.branch_users.includes(:branch, :role).map do |branch_user|
+    branch_users = @user.branch_users.includes(:branch, :role)
+    branch_users.map do |branch_user|
       {
         id: branch_user.branch.id,
         name: branch_user.branch.name,
@@ -50,18 +51,20 @@ class Api::V1::UserSerializer < BaseSerializer
 
   def branches_without_roles
     return nil if @branch
-    @user.branch_users.includes(:branch).map do |branch_user|
+    @user.branch_users.map do |branch_user|
+      branch = branch_user.branch
+      next unless branch
       {
-        id: branch_user.branch.id,
-        name: branch_user.branch.name
+        id: branch.id,
+        name: branch.name
       }
-    end
+    end.compact
   end
 
   def role_for_branch
     return nil unless @branch
 
-    branch_user = @user.branch_users.find { |bu| bu.branch_id == @branch.id }
+    branch_user = @user.branch_users.detect { |bu| bu.branch_id == @branch.id }
     return nil unless branch_user&.role
 
     {
