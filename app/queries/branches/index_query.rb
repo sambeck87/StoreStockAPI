@@ -5,11 +5,11 @@ class Branches::IndexQuery
   end
 
   def call
-    base_scope = base_scope.includes(:manager)
+    scope = base_scope.includes(:manager)
 
-    return base_scope if @current_user.super_admin?
+    return scope if @current_user.super_admin?
 
-    base_scope
+    scope
       .joins(:branch_users)
       .where(branch_users: { user_id: @current_user.id })
       .distinct
