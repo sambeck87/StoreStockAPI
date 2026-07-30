@@ -12,4 +12,3 @@ class Api::V1::SessionSerializer
     }
   end
 end
-

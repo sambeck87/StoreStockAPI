@@ -4,8 +4,8 @@ class Pagination
 
   def initialize(scope, page: 1, per_page: DEFAULT_PER_PAGE)
     @scope = scope
-    @page = [page.to_i, 1].max
-    @per_page = [[per_page.to_i, 1].max, MAX_PER_PAGE].min
+    @page = [ page.to_i, 1 ].max
+    @per_page = [ [ per_page.to_i, 1 ].max, MAX_PER_PAGE ].min
   end
 
   def records

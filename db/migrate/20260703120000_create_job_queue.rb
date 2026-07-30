@@ -10,6 +10,6 @@ class CreateJobQueue < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :job_queue, [:status, :job_type, :created_at], name: "index_job_queue_on_status_job_type_created_at"
+    add_index :job_queue, [ :status, :job_type, :created_at ], name: "index_job_queue_on_status_job_type_created_at"
   end
 end

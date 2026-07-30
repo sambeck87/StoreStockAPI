@@ -34,8 +34,8 @@ class InventoryExportJob < ApplicationJob
   end
 
   def headers
-    ["ID", "Nombre", "Medida", "Costo", "Categoría", "Sucursal",
-     "Cantidad actual", "Cantidad mínima", "Estado", "Activo"]
+    [ "ID", "Nombre", "Medida", "Costo", "Categoría", "Sucursal",
+     "Cantidad actual", "Cantidad mínima", "Estado", "Activo" ]
   end
 
   def row(item)
@@ -43,9 +43,9 @@ class InventoryExportJob < ApplicationJob
     minimum  = item.respond_to?(:inventory_minimum) ? item.inventory_minimum : nil
     active   = item.respond_to?(:inventory_active) ? item.inventory_active : item.active
 
-    [item.id, item.name, item.measure, item.cost.to_f, item.category&.name,
+    [ item.id, item.name, item.measure, item.cost.to_f, item.category&.name,
      item.respond_to?(:inventory_branch_name) ? item.inventory_branch_name : nil,
-     quantity, minimum, compute_quantity_status(quantity, minimum), active]
+     quantity, minimum, compute_quantity_status(quantity, minimum), active ]
   end
 
   def compute_quantity_status(quantity, minimum)

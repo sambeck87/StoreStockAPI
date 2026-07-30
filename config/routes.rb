@@ -39,7 +39,7 @@ Rails.application.routes.draw do
         resources :users, only: [ :index, :show, :update, :destroy ]
       end
 
-      get 'inventory', to: 'inventory#index'
+      get "inventory", to: "inventory#index"
 
       namespace :inventory do
         resources :exports, only: [ :create, :show ] do

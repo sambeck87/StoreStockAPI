@@ -10,6 +10,6 @@ module Paginatable
 
   def paginate(scope, page: 1, per_page: Pagination::DEFAULT_PER_PAGE)
     pagination = Pagination.new(scope, page: page, per_page: per_page)
-    [pagination.records, pagination.metadata]
+    [ pagination.records, pagination.metadata ]
   end
 end

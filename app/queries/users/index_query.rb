@@ -17,7 +17,7 @@ class Users::IndexQuery
   def base_scope
     scope = User
       .where(store_id: @current_user.store_id)
-      .includes(:global_permission, branch_users: [:role, :branch])
+      .includes(:global_permission, branch_users: [ :role, :branch ])
 
     if @current_user.has_global_permission?(:user, :index)
       if @params[:branch_id].present?

@@ -8,7 +8,7 @@ class Api::V1::GlobalPermissionsController < ApplicationController
       current_user: current_user,
     ).call
 
-    render_serialized( global_permissions, view: :full)
+    render_serialized(global_permissions, view: :full)
   end
 
   def show

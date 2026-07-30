@@ -13,7 +13,7 @@ class Items::InventoryQuery
 
     scope = scope.where(category_id: @params[:category_id]) if @params[:category_id].present?
 
-    if @params[:active].present? && @params[:active] != 'all'
+    if @params[:active].present? && @params[:active] != "all"
       scope = scope.where(branch_items: { active: @params[:active] })
     end
 
@@ -22,19 +22,19 @@ class Items::InventoryQuery
 
     if @params[:quantity_status].present?
       scope = case @params[:quantity_status]
-              when "complete"
+      when "complete"
                 scope.where(
                   "branch_items.current_quantity > 0 AND (branch_items.minimum_quantity IS NULL OR branch_items.current_quantity >= branch_items.minimum_quantity)"
                 )
-              when "low"
+      when "low"
                 scope.where(
                   "branch_items.current_quantity > 0 AND branch_items.minimum_quantity IS NOT NULL AND branch_items.current_quantity < branch_items.minimum_quantity"
                 )
-              when "empty"
+      when "empty"
                 scope.where("branch_items.current_quantity IS NULL OR branch_items.current_quantity <= 0")
-              else
+      else
                 scope
-              end
+      end
     end
 
     scope = scope.joins("INNER JOIN branches ON branches.id = branch_items.branch_id")

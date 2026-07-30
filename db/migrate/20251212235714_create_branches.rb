@@ -10,7 +10,7 @@ class CreateBranches < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :branches, [:store_id, :name], unique: true
-    add_index :branches, [:store_id, :is_main], unique: true
+    add_index :branches, [ :store_id, :name ], unique: true
+    add_index :branches, [ :store_id, :is_main ], unique: true
   end
 end
