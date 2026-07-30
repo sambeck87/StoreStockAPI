@@ -6,6 +6,7 @@ class Branches::FindAccessible
   end
 
   def call
+    @current_user.preload_for_authorization
     base_scope.find(@id)
   end
 

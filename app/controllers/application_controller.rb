@@ -21,7 +21,7 @@ class ApplicationController < ActionController::API
     decoded = JsonWebToken.decode(token)
     raise UnauthorizedError if decoded.blank?
 
-    @current_user = User.includes(:store, :global_permission, branch_users: [ :role, :branch ]).find(decoded[:user_id])
+    @current_user = User.find(decoded[:user_id])
   rescue ActiveRecord::RecordNotFound,
          JWT::DecodeError,
          JWT::ExpiredSignature
@@ -56,6 +56,8 @@ class ApplicationController < ActionController::API
   end
 
   def policy_for(record)
+    current_user.preload_for_authorization
+
     policy_class = "#{record.is_a?(Class) ? record.name : record.class.name}Policy".constantize
 
     policy_class.new(

@@ -5,6 +5,7 @@ class Stores::FindAccessible
   end
 
   def call
+    @current_user.preload_for_authorization
     scope = base_scope
     scope = filter_by_id(scope)
     scope = apply_filters(scope)

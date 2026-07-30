@@ -3,6 +3,8 @@ class Api::V1::StoresController < ApplicationController
   before_action :set_store, only: %i[show update destroy]
 
   def index
+    current_user.preload_for_authorization
+
     stores = Stores::FindAccessible.new(
       current_user: current_user,
       params: params

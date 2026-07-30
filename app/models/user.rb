@@ -65,14 +65,27 @@ class User < ApplicationRecord
   end
 
   def role_for(branch)
-    branch_users.find_by(branch: branch)&.role
+    branch_users.includes(:role, :branch).find_by(branch: branch)&.role
   end
 
   def role_for_main_branch
     branch_users
+      .includes(:role, :branch)
       .joins(:branch)
       .find_by(branches: { is_main: true })
       &.role
+  end
+
+  def preload_for_authorization
+    return if @authorization_preloaded
+
+    store
+    global_permission
+    branch_users.each do |bu|
+      bu.role
+      bu.branch
+    end
+    @authorization_preloaded = true
   end
 
   private

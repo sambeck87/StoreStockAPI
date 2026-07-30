@@ -2,6 +2,8 @@ class Api::V1::BranchesController < ApplicationController
   before_action :set_branch, only: %i[show update destroy]
 
   def index
+    current_user.preload_for_authorization
+
     branches = Branches::IndexQuery.new(
       current_user: current_user,
       store: current_store

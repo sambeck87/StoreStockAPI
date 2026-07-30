@@ -5,6 +5,5 @@ class AddPerformanceIndexes < ActiveRecord::Migration[8.1]
     add_index :users, :reset_password_token, name: "index_users_on_reset_password_token"
     add_index :users, :confirmation_token, name: "index_users_on_confirmation_token"
     add_index :users, [:store_id, :active], name: "index_users_on_store_id_and_active"
-    add_index :roles, :permissions, using: :gin, name: "index_roles_on_permissions_gin"
   end
 end

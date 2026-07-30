@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_03_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_22_000002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -23,6 +23,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_03_120000) do
     t.integer "minimum_quantity"
     t.datetime "updated_at", null: false
     t.bigint "updated_by_id"
+    t.index ["branch_id", "item_id"], name: "index_branch_items_on_branch_and_item", unique: true
     t.index ["branch_id"], name: "index_branch_items_on_branch_id"
     t.index ["item_id"], name: "index_branch_items_on_item_id"
     t.index ["updated_by_id"], name: "index_branch_items_on_updated_by_id"
@@ -36,6 +37,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_03_120000) do
     t.bigint "user_id", null: false
     t.index ["branch_id"], name: "index_branch_users_on_branch_id"
     t.index ["role_id"], name: "index_branch_users_on_role_id"
+    t.index ["user_id", "branch_id"], name: "index_branch_users_on_user_and_branch", unique: true
     t.index ["user_id"], name: "index_branch_users_on_user_id"
   end
 
@@ -106,17 +108,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_03_120000) do
     t.index ["updated_by_id"], name: "index_items_on_updated_by_id"
   end
 
-  create_table "job_queue", force: :cascade do |t|
-    t.text "args"
-    t.datetime "created_at", null: false
-    t.string "error_message"
-    t.string "job_type", null: false
-    t.datetime "scheduled_at"
-    t.string "status", default: "pending", null: false
-    t.datetime "updated_at", null: false
-    t.index ["status", "job_type", "created_at"], name: "index_job_queue_on_status_job_type_created_at"
-  end
-
   create_table "roles", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name", null: false
@@ -149,8 +140,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_03_120000) do
     t.string "reset_password_token"
     t.bigint "store_id"
     t.datetime "updated_at", null: false
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["global_permission_id"], name: "index_users_on_global_permission_id"
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token"
+    t.index ["store_id", "active"], name: "index_users_on_store_id_and_active"
     t.index ["store_id"], name: "index_users_on_store_id"
   end
 

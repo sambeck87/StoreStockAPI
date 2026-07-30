@@ -10,7 +10,8 @@ class Api::V1::Inventory::ExportsController < ApplicationController
     ).call
 
     if items.empty?
-      render json: { error: "Stock vacío, no se puede descargar el reporte" }, status: :unprocessable_entity
+      render json: { error: "Stock vacío, no se puede descargar el reporte" },
+             status: :unprocessable_entity
       return
     end
 
@@ -21,7 +22,7 @@ class Api::V1::Inventory::ExportsController < ApplicationController
       filters: export_params
     )
 
-    InventoryQueue.enqueue(export.id)
+    InventoryExportJob.perform_later(export.id)
 
     render json: serialize_export(export), status: :created
   end
@@ -34,7 +35,8 @@ class Api::V1::Inventory::ExportsController < ApplicationController
   def download
     export = InventoryExport.find(params[:id])
     if export.completed?
-      send_file export.file_path, type: "text/csv", filename: "inventario_#{export.id}.csv"
+      send_file export.file_path, type: "text/csv",
+                filename: "inventario_#{export.id}.csv"
     else
       render json: { error: "Export not ready" }, status: :not_found
     end
@@ -52,7 +54,8 @@ class Api::V1::Inventory::ExportsController < ApplicationController
       status: export.status,
       filters: export.filters || {},
       error_message: export.error_message,
-      download_url: export.completed? ? download_api_v1_inventory_export_path(export.id) : nil,
+      download_url: export.completed? ?
+        download_api_v1_inventory_export_path(export.id) : nil,
       created_at: export.created_at
     }
   end
