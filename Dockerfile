@@ -1,5 +1,4 @@
 # syntax=docker/dockerfile:1
-# check=error=true
 
 # Production Dockerfile para Rails 8 + PostgreSQL + Thruster
 
