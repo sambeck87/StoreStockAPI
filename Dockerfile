@@ -73,4 +73,4 @@ ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
 EXPOSE 80
 
-CMD ["sleep", "infinity"]
+CMD ["./bin/thrust", "./bin/rails", "server"]

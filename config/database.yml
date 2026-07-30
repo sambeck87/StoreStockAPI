@@ -13,4 +13,8 @@ test:
 
 production:
   <<: *default
-  url: <%= ENV.fetch("DATABASE_URL") %>
+  url: <%= ENV["DATABASE_URL"] %>
+  database: <%= ENV["STORE_STOCK_API_DATABASE_NAME"] || "store_stock_api_production" %>
+  username: <%= ENV["STORE_STOCK_API_DATABASE_USERNAME"] %>
+  password: <%= ENV["STORE_STOCK_API_DATABASE_PASSWORD"] %>
+  host: <%= ENV["DB_HOST"] %>
