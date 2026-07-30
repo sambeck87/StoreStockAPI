@@ -1,31 +1,66 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
 en:
-  hello: "Hello world"
+  errors:
+    user_inactive: "User account is inactive"
+    unconfirmed_email: "Please confirm your email to sign in"
+    missing_parameter: "Required parameters are missing"
+    validation_failed: "There are validation errors"
+    not_found: "Resource not found"
+    dependency_violation: "The resource cannot be deleted because it has associated dependencies"
+    authentication:
+      invalid_credentials: "Invalid credentials"
+    authorization:
+      forbidden: "You are not allowed to perform this action"
+    unauthorized: "You are not authorized to perform this action"
+    branch:
+      main_branch_manager_immutable: "The manager of the main branch cannot be changed"
+    user:
+      has_managed_branches: "The user cannot be deleted because they manage one or more branches"
+
+  confirmation_mailer:
+    confirmation:
+      subject: "Confirm your account"
+
+  registrations:
+    create:
+      success: "Account created. Please check your email to activate your account."
+    errors:
+      messages:
+        record_invalid: "Validation failed"
+      models:
+        user:
+          attributes:
+            email:
+              blank: "can't be blank"
+              taken: "is already taken"
+            password:
+              blank: "can't be blank"
+              too_short: "is too short"
+              invalid: "the password must contain at least 8 characters, one uppercase letter, one lowercase letter, and one number"
+            password_confirmation:
+              blank: "can't be blank"
+              confirmation: "doesn't match confirmation"
+            full_name:
+              blank: "can't be blank"
+        category:
+          attributes:
+            name:
+              blank: "can't be blank"
+              taken: "category already exists in this store"
+        role:
+          attributes:
+            name:
+              blank: "can't be blank"
+              taken: "role already exists in this store"
+        global_permission:
+          attributes:
+            name:
+              blank: "can't be blank"
+              taken: "global permission already exists in this store"
+        item:
+          attributes:
+            name:
+              taken: "el rol ya existe en esta tienda"
+              blank: "can't be blank"
+            category:
+              blank: "can't be blank"
+              required: "can't be blank"

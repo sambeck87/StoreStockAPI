@@ -1,0 +1,79 @@
+es:
+  errors:
+    user_inactive: "La cuenta de usuario está inactiva"
+    unconfirmed_email: "Por favor verifica tu correo electrónico para iniciar sesión"
+    missing_parameter: "Faltan parametros requeridos"
+    validation_failed: "Hay errores de validación"
+    not_found: "Recurso no encontrado"
+    dependency_violation: "No se puede eliminar el recurso porque tiene dependencias asociadas"
+    authentication:
+      invalid_credentials: "Credenciales inválidas"
+    authorization:
+      forbidden: "No tienes permisos para realizar esta acción"
+    unauthorized: "No estás autorizado para realizar esta acción"
+    branch:
+      main_branch_manager_immutable: "No se puede cambiar el gerente de la sucursal principal"
+    user:
+      has_managed_branches: "No se puede eliminar el usuario porque administra una o más sucursales"
+    item:
+      already_exists_in_branch: "El elemento ya existe en esta sucursal"
+
+  passwords_mailer:
+    reset:
+      subject: "Restablecer tu contraseña"
+
+  confirmation_mailer:
+    confirmation:
+      subject: "Confirma tu cuenta"
+
+  registrations:
+    create:
+      success: "Cuenta creada. Por favor verifica tu correo electrónico para activar tu cuenta."
+
+  activerecord:
+    errors:
+      messages:
+        record_invalid: "La validación falló"
+        restrict_dependent_destroy:
+          has_many: "No se puede eliminar el registro porque tiene %{record} dependientes"
+      models:
+        user:
+          attributes:
+            email:
+              blank: "no puede estar vacío"
+              taken: "ya está en uso"
+            password:
+              blank: "no puede estar vacía"
+              too_short: "es demasiado corta"
+              invalid: "la contraseña debe contener al menos 8 caracteres, una letra mayúscula, una letra minúscula y un número"
+            password_confirmation:
+              blank: "no puede estar vacía"
+              confirmation: "la contraseña no coincide con la confirmación"
+            full_name:
+              blank: "no puede estar vacío"
+        category:
+          attributes:
+            name:
+              blank: "no puede estar vacío"
+              taken: "la categoría ya existe en esta tienda"
+            base:
+              restrict_dependent_destroy:
+                has_many: "No se puede eliminar la categoría porque tiene %{record} asociados"
+        role:
+          attributes:
+            name:
+              blank: "no puede estar vacío"
+              taken: "el rol ya existe en esta tienda"
+        global_permission:
+          attributes:
+            name:
+              blank: "no puede estar vacío"
+              taken: "el permiso global ya existe en esta tienda"
+        item:
+          attributes:
+            name:
+              blank: "no puede estar vacío"
+              taken: "el elemento ya existe en esta tienda"
+            category:
+              required: "no puede estar vacío"
+              blank: "no puede estar vacío"

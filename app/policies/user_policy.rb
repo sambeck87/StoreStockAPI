@@ -1,0 +1,54 @@
+class UserPolicy < ApplicationPolicy
+  def index?
+    allows?(:user, :index) ||
+    allows?(:user, :create) ||
+    allows?(:user, :update) ||
+    allows?(:user, :delete)
+  end
+
+  def show?
+    return true if own_profile?
+
+    allows?(:user, :show)
+  end
+
+  def create?
+    allows?(:user, :create)
+  end
+
+  def update?
+    return true if own_profile?
+
+    allows?(:user, :update)
+  end
+
+  def destroy?
+    return true if own_profile?
+
+    allows?(:user, :delete)
+  end
+
+  def manage?
+    return false unless actor.super_admin?
+
+    true
+  end
+
+  def revoke_access?
+    return false unless actor.super_admin?
+
+    true
+  end
+
+  def detach_store?
+    return false unless actor.super_admin?
+
+    true
+  end
+
+  private
+
+  def own_profile?
+    record.is_a?(User) && actor.id == record.id
+  end
+end
