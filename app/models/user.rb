@@ -57,10 +57,14 @@ class User < ApplicationRecord
     global_permission&.allows?(resource, action) || false
   end
 
+  PERMISSION_RESOURCES = %w[user store branch category item role global_permission].freeze
+
   def branch_ids_with_permission(resource, action)
+    raise ArgumentError, "invalid resource: #{resource}" unless resource.to_s.in?(PERMISSION_RESOURCES)
+
     branch_users
       .joins(:role)
-      .where("JSON_CONTAINS(roles.permissions, ?, '$.#{resource}')", "\"#{action}\"")
+      .where("JSON_CONTAINS(roles.permissions, ?, ?)", "\"#{action}\"", "$.#{resource}")
       .pluck(:branch_id)
   end
 

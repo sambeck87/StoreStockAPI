@@ -35,8 +35,8 @@ class Api::V1::Inventory::ExportsController < ApplicationController
   def download
     export = InventoryExport.find(params[:id])
     if export.completed?
-      send_file export.file_path, type: "text/csv",
-                filename: "inventario_#{export.id}.csv"
+      send_file InventoryExport.file_path_for(export.id), type: "text/csv",
+                filename: "inventario_exportacion.csv"
     else
       render json: { error: "Export not ready" }, status: :not_found
     end
