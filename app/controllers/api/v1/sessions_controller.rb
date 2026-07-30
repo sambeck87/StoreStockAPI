@@ -6,6 +6,7 @@ class Api::V1::SessionsController < ApplicationController
     user = User.find_by(email: params[:email])
 
     raise AuthenticationError unless user&.authenticate(params[:password])
+    raise UnconfirmedEmailError if user.confirmation_token.present?
 
     token = JsonWebToken.encode(user_id: user.id)
 

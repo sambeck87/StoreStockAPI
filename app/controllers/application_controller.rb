@@ -29,8 +29,8 @@ class ApplicationController < ActionController::API
   end
 
   def set_locale
-    I18n.locale =
-      request.headers["Accept-Language"]&.to_sym || I18n.default_locale
+    locale = request.headers["Accept-Language"]&.split(",")&.first&.strip&.split("-")&.first
+    I18n.locale = locale.present? && I18n.available_locales.include?(locale.to_sym) ? locale.to_sym : I18n.default_locale
   end
 
   def current_branch
@@ -38,28 +38,26 @@ class ApplicationController < ActionController::API
 
     return @current_branch = nil unless params[:branch_id]
 
-    @current_branch = current_store.branches.find(params[:branch_id])
+    @current_branch = current_user.branch_users.find { |bu| bu.branch_id == params[:branch_id].to_i }&.branch
+    @current_branch ||= current_store.branches.find(params[:branch_id])
   end
 
   def current_store
     return @current_store if defined?(@current_store)
 
-    @current_store =
-      if current_user.super_admin? && params[:store_id]
-        Store.find(params[:store_id])
-      else
-        current_user.store
-      end
+    @current_store = current_user.store
   end
 
   def authorize!(record)
     policy = policy_for(record)
     action = "#{action_name}?"
 
-    raise UnauthorizedError unless policy.public_send(action)
+    raise AuthorizationError unless policy.public_send(action)
   end
 
   def policy_for(record)
+    current_user.preload_for_authorization
+
     policy_class = "#{record.is_a?(Class) ? record.name : record.class.name}Policy".constantize
 
     policy_class.new(

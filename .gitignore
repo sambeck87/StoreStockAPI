@@ -4,8 +4,9 @@
 # belong in git's global ignore instead:
 # `$XDG_CONFIG_HOME/git/ignore` or `~/.config/git/ignore`
 
-# Ignore bundler config.
+# Ignore bundler config and vendored gems.
 /.bundle
+/vendor/bundle
 
 # Ignore all environment files.
 /.env*
@@ -30,4 +31,31 @@
 
 # Ignore key files for decrypting credentials and more.
 /config/*.key
+
+# Ignore OpenCode IDE config
+.opencode/
+
+# Ignore generated knowledge graph
+graphify-out/
+
+# Ignore Redis dump
+dump.rdb
+
+# Ignore OpenCode agent instructions
+AGENTS.md
+
+# Ignore test coverage output
+coverage/
+
+# Ignore RSpec persistent examples
+spec/examples.txt
+
+# Ignore debugger history
+.byebug_history
+
+# Ignore development Procfile (contains local config)
+Procfile.dev
+
+# Ignore node_modules (for any JS tooling)
+node_modules/
 

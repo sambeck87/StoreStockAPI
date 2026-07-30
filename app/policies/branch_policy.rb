@@ -1,28 +1,28 @@
 class BranchPolicy < ApplicationPolicy
-  def index?
-    allows?(:branch, :index)
-  end
-
   def show?
-    return true if actor.super_admin?
+    return false unless record.branch_users.any? { |bu| bu.user_id == actor.id }
 
-    record.users.exists?(actor.id)
+    allows?(:branch, :show)
   end
 
   def create?
+    return false unless actor.super_admin?
     return false unless owns_store?
 
-    actor.super_admin?
+    allows?(:branch, :create)
   end
 
   def update?
     return false unless owns_store?
 
-    actor.super_admin? || record.manager_id == actor.id
+    allows?(:branch, :update)
   end
 
   def destroy?
-    actor.super_admin?
+    return false unless actor.super_admin?
+    return false unless owns_store?
+
+    allows?(:branch, :delete)
   end
 
   def owns_store?

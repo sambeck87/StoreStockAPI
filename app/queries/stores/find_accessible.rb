@@ -5,6 +5,7 @@ class Stores::FindAccessible
   end
 
   def call
+    @current_user.preload_for_authorization
     scope = base_scope
     scope = filter_by_id(scope)
     scope = apply_filters(scope)
@@ -14,14 +15,17 @@ class Stores::FindAccessible
   private
 
   def base_scope
-    Store.all
+    Store.all.includes(:user)
   end
 
   def filter_by_id(scope)
+    return scope unless @params[:id].present?
 
-    return scope unless @params[:id].present? and @current_user.super_admin?
-
-    scope.where(id: @params[:id], user_id: @current_user.id)
+    if @current_user.super_admin?
+      scope.where(id: @params[:id])
+    else
+      scope.where(id: @params[:id], user_id: @current_user.id)
+    end
   end
 
   def apply_filters(scope)

@@ -5,11 +5,14 @@ class Api::V1::RegistrationsController < ApplicationController
   def create
     user = User.new(registration_params)
 
+    user.confirmation_token = SecureRandom.urlsafe_base64(48)
+    user.confirmation_sent_at = Time.current
+
     user.save!
 
-    token = JsonWebToken.encode(user_id: user.id)
+    ConfirmationMailer.confirmation(user).deliver_later
 
-    render_response({ user: user, token: token }, with: :session, status: :created)
+    render json: { message: I18n.t("registrations.create.success") }, status: :created
   end
 
   private

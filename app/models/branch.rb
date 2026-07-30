@@ -1,4 +1,6 @@
 class Branch < ApplicationRecord
+  attr_accessor :destroying_store
+
   belongs_to :store
   belongs_to :manager, class_name: "User", optional: true
 
@@ -24,6 +26,8 @@ class Branch < ApplicationRecord
   end
 
   def prevent_main_deletion
+    return if destroying_store
+
     throw(:abort) if is_main?
   end
 end

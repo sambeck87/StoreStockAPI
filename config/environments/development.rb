@@ -1,10 +1,13 @@
 require "active_support/core_ext/integer/time"
 
+ENV["SSL_CERT_FILE"] ||= "/etc/ssl/certs/ca-certificates.crt"
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
   # Make code changes take effect immediately without server restart.
   config.enable_reloading = true
+  config.hosts << /.*\.devtunnels\.ms$/
 
   # Do not eager load code on boot.
   config.eager_load = false
@@ -38,6 +41,11 @@ Rails.application.configure do
   # Set localhost to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
 
+  # Use letter opener in development
+  # config.action_mailer.delivery_method = :letter_opener
+  config.action_mailer.delivery_method = :resend
+  config.action_mailer.perform_deliveries = true
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
@@ -52,6 +60,9 @@ Rails.application.configure do
 
   # Highlight code that enqueued background job in logs.
   config.active_job.verbose_enqueue_logs = true
+
+  # Use Sidekiq for background jobs in development
+  config.active_job.queue_adapter = :sidekiq
 
   # Highlight code that triggered redirect in logs.
   config.action_dispatch.verbose_redirect_logs = true

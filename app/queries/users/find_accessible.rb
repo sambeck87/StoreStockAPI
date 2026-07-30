@@ -6,16 +6,20 @@ class Users::FindAccessible
   end
 
   def call
+    @current_user.preload_for_authorization
+
+    return User.find(@id) if @current_user.id == @id.to_i
+
     base_scope.find(@id)
   end
 
   private
 
   def base_scope
-    scope = User.where(store_id: @current_user.store_id)
+    scope = User.all.includes(:global_permission, branch_users: :role)
 
     return scope if @current_user.super_admin?
-    return scope if @current_user.id == @id.to_i
+    return scope.where(store_id: @current_user.store_id) if @current_user.store_id.present?
 
     return User.none unless @current_branch
 

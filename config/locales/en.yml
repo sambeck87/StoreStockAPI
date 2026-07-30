@@ -1,6 +1,7 @@
 en:
   errors:
     user_inactive: "User account is inactive"
+    unconfirmed_email: "Please confirm your email to sign in"
     missing_parameter: "Required parameters are missing"
     validation_failed: "There are validation errors"
     not_found: "Resource not found"
@@ -15,7 +16,13 @@ en:
     user:
       has_managed_branches: "The user cannot be deleted because they manage one or more branches"
 
-  activerecord:
+  confirmation_mailer:
+    confirmation:
+      subject: "Confirm your account"
+
+  registrations:
+    create:
+      success: "Account created. Please check your email to activate your account."
     errors:
       messages:
         record_invalid: "Validation failed"
@@ -34,3 +41,26 @@ en:
               confirmation: "doesn't match confirmation"
             full_name:
               blank: "can't be blank"
+        category:
+          attributes:
+            name:
+              blank: "can't be blank"
+              taken: "category already exists in this store"
+        role:
+          attributes:
+            name:
+              blank: "can't be blank"
+              taken: "role already exists in this store"
+        global_permission:
+          attributes:
+            name:
+              blank: "can't be blank"
+              taken: "global permission already exists in this store"
+        item:
+          attributes:
+            name:
+              taken: "el rol ya existe en esta tienda"
+              blank: "can't be blank"
+            category:
+              blank: "can't be blank"
+              required: "can't be blank"

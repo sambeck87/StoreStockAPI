@@ -9,8 +9,8 @@ class ApiError < StandardError
 end
 
 class AuthenticationError < ApiError
-  def initialize(message = "Invalid credentials")
-    super(message, status: 401, code: :authentication_failed)
+  def initialize(message = nil)
+    super(message || I18n.t("errors.authentication.invalid_credentials"), status: 401, code: :authentication_failed)
   end
 end
 
@@ -94,6 +94,16 @@ class InactiveUserError < ApiError
       I18n.t("errors.user_inactive"),
       status: 403,
       code: :user_inactive
+    )
+  end
+end
+
+class UnconfirmedEmailError < ApiError
+  def initialize
+    super(
+      I18n.t("errors.unconfirmed_email"),
+      status: 401,
+      code: :unconfirmed_email
     )
   end
 end

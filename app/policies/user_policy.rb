@@ -1,6 +1,9 @@
 class UserPolicy < ApplicationPolicy
   def index?
-    allows?(:user, :index)
+    allows?(:user, :index) ||
+    allows?(:user, :create) ||
+    allows?(:user, :update) ||
+    allows?(:user, :delete)
   end
 
   def show?
@@ -23,6 +26,24 @@ class UserPolicy < ApplicationPolicy
     return true if own_profile?
 
     allows?(:user, :delete)
+  end
+
+  def manage?
+    return false unless actor.super_admin?
+
+    true
+  end
+
+  def revoke_access?
+    return false unless actor.super_admin?
+
+    true
+  end
+
+  def detach_store?
+    return false unless actor.super_admin?
+
+    true
   end
 
   private

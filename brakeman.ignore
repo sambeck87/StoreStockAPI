@@ -1,0 +1,15 @@
+{
+  "ignored_warnings": [
+    {
+      "fingerprint": "8dbf02760bf1e66cbc6d913d2671d9062cf7c45e24c8eb9cde0164cb975226c8",
+      "warning_type": "File Access",
+      "warning_code": 16,
+      "message": "Model attribute used in file name",
+      "file": "app/controllers/api/v1/inventory/exports_controller.rb",
+      "line": 38,
+      "code": "send_file(InventoryExport.file_path_for(InventoryExport.find(params[:id]).id), :type => \"text/csv\", :filename => \"inventario_exportacion.csv\")",
+      "confidence": "Medium",
+      "note": "Falso positivo: export.id es un PK auto-incrementable numérico, no input del usuario"
+    }
+  ]
+}

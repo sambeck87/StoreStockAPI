@@ -6,13 +6,14 @@ class Branches::FindAccessible
   end
 
   def call
+    @current_user.preload_for_authorization
     base_scope.find(@id)
   end
 
   private
 
   def base_scope
-    scope = @store.branches
+    scope = @store.branches.includes(:manager)
 
     return scope if @current_user.super_admin?
 

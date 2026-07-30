@@ -1,7 +1,10 @@
 class Api::V1::StoresController < ApplicationController
   skip_before_action :ensure_active_user!, only: %i[index show create]
+  before_action :set_store, only: %i[show update destroy]
 
   def index
+    current_user.preload_for_authorization
+
     stores = Stores::FindAccessible.new(
       current_user: current_user,
       params: params
@@ -16,15 +19,10 @@ class Api::V1::StoresController < ApplicationController
   end
 
   def show
-    store = Stores::FindAccessible.new(
-      current_user: current_user,
-      params: { id: params[:id] }
-    ).call.first!
-
-    authorize!(store)
+    authorize!(@store)
 
     render_serialized(
-      store,
+      @store,
       with: :store,
       view: :full,
       status: :ok
@@ -46,24 +44,34 @@ class Api::V1::StoresController < ApplicationController
   end
 
   def update
-    store = Stores::FindAccessible.new(
-      current_user: current_user,
-      params: { id: params[:id] }
-    ).call.first!
+    authorize!(@store)
 
-    authorize!(store)
-
-    store.update!(store_params)
+    @store.update!(store_params)
 
     render_serialized(
-      store,
+      @store,
       with: :store,
       view: :full,
       status: :ok
     )
   end
 
+  def destroy
+    authorize!(@store)
+
+    Stores::DeleteStore.new(actor: current_user, store: @store).call
+
+    head :no_content
+  end
+
   private
+
+  def set_store
+    @store = Stores::FindAccessible.new(
+      current_user: current_user,
+      params: { id: params[:id] }
+    ).call.first!
+  end
 
   def store_params
     params.require(:store).permit(:name)

@@ -1,30 +1,52 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
+      resources :sessions, only: [ :create ]
+      resource :registration, only: [ :create ]
+      resources :confirmations, only: [ :update ]
+      resources :global_permissions
+      resource :passwords, only: [] do
+        collection do
+          post :reset
+          put :update
+          post :confirm_email
+        end
+      end
 
-      resources :sessions, only: [:create]
-      resource :registration, only: [:create]
+      resources :users, only: [ :index, :show, :update, :destroy ]
+      resources :roles
 
-      resources :users, only: [:show, :update, :destroy]
+      resources :categories do
+        resources :items
+      end
 
-      resources :branches, only: [] do
-        resources :users, only: [:index, :show, :update, :destroy]
+      resources :branches do
+        resources :users, only: [ :index, :show, :update, :destroy ]
+        resources :items
       end
 
       namespace :admin do
         resources :users, only: [] do
           member do
             patch :manage
+            delete "branches/:branch_id", to: "users#revoke_access"
+            delete :store, to: "users#detach_store"
           end
         end
       end
 
-      resources :stores, only: [:index, :show, :create, :update, :destroy] do
-        resources :users, only: [:index, :show, :update, :destroy]
-        resources :branches
-        resources :categories
-        resources :items
-        resources :roles
+      resources :stores, only: [ :index, :show, :create, :update, :destroy ] do
+        resources :users, only: [ :index, :show, :update, :destroy ]
+      end
+
+      get "inventory", to: "inventory#index"
+
+      namespace :inventory do
+        resources :exports, only: [ :create, :show ] do
+          member do
+            get :download
+          end
+        end
       end
     end
   end
