@@ -1,7 +1,7 @@
 class PasswordsMailer < ApplicationMailer
   def reset(user)
     @user = user
-    @reset_url = "#{ENV.fetch('FRONTEND_URL', 'http://localhost:3001')}/reset-password?token=#{user.reset_password_token}"
+    @reset_url = "#{Rails.application.config.x.frontend_url}/reset-password?token=#{user.reset_password_token}"
 
     mail(
       to: user.email,

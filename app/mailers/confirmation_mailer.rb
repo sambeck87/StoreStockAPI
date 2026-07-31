@@ -1,7 +1,7 @@
 class ConfirmationMailer < ApplicationMailer
   def confirmation(user)
     @user = user
-    @confirmation_url = "#{ENV.fetch('FRONTEND_URL', 'http://localhost:5173')}/confirm-email?token=#{user.confirmation_token}"
+    @confirmation_url = "#{Rails.application.config.x.frontend_url}/confirm-email?token=#{user.confirmation_token}"
 
     mail(
       to: user.email,

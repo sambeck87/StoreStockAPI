@@ -43,6 +43,8 @@ module StoreStockApi
     config.i18n.available_locales = [ :en, :es ]
     config.i18n.default_locale = :es
 
+    config.x.frontend_url = ENV.fetch("FRONTEND_URL", "http://localhost:3001").delete_suffix("/")
+
     config.active_storage.variant_processor = :disabled
 
     config.action_mailer.smtp_settings = {
