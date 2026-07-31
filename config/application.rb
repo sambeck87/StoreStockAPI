@@ -45,6 +45,9 @@ module StoreStockApi
 
     config.active_storage.variant_processor = :disabled
 
+    # TEMPORAL: delivery job con logs para diagnosticar envios en produccion
+    config.action_mailer.delivery_job = "MailDeliveryLogJob"
+
     config.action_mailer.smtp_settings = {
       address: ENV.fetch("SMTP_ADDRESS", "smtp-relay.brevo.com"),
       port: ENV.fetch("SMTP_PORT", 587),

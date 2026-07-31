@@ -10,6 +10,7 @@ class Api::V1::RegistrationsController < ApplicationController
 
     user.save!
 
+    Rails.logger.info("[MAIL-TEMP] Encolando correo de confirmacion para #{user.email} (job: #{ActionMailer::Base.delivery_job})")
     ConfirmationMailer.confirmation(user).deliver_later
 
     render json: { message: I18n.t("registrations.create.success") }, status: :created

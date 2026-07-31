@@ -11,6 +11,7 @@ class Api::V1::PasswordsController < ApplicationController
         reset_password_token: SecureRandom.urlsafe_base64(48),
         reset_password_sent_at: Time.current
       )
+      Rails.logger.info("[MAIL-TEMP] Encolando correo de reset para #{user.email} (job: #{ActionMailer::Base.delivery_job})")
       PasswordsMailer.reset(user).deliver_later
     end
 
