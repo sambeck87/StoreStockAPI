@@ -44,5 +44,16 @@ module StoreStockApi
     config.i18n.default_locale = :es
 
     config.active_storage.variant_processor = :disabled
+
+    config.action_mailer.smtp_settings = {
+      address: ENV.fetch("SMTP_ADDRESS", "smtp-relay.brevo.com"),
+      port: ENV.fetch("SMTP_PORT", 587),
+      user_name: ENV.fetch("SMTP_USERNAME", ""),
+      password: ENV.fetch("SMTP_PASSWORD", ""),
+      authentication: :plain,
+      enable_starttls_auto: true,
+      ca_file: ENV.fetch("SMTP_CA_FILE", "/etc/ssl/certs/ca-certificates.crt"),
+      domain: ENV.fetch("APP_HOST", "localhost")
+    }
   end
 end
