@@ -73,4 +73,4 @@ ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
 EXPOSE 80
 
-CMD ["sh", "-c", "if [ \"$WORKER\" = \"true\" ]; then bundle exec sidekiq; else bundle exec puma -C config/puma.rb; fi"]
+CMD ["sh", "-c", "if [ \"$WORKER\" = \"true\" ]; then bundle exec sidekiq -q exports -q default; else bundle exec puma -C config/puma.rb; fi"]
