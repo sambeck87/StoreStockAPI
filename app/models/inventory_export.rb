@@ -2,13 +2,7 @@ class InventoryExport < ApplicationRecord
   belongs_to :user
   belongs_to :store
 
-  def file_path
-    self.class.file_path_for(id)
-  end
-
-  def self.file_path_for(id)
-    Rails.root.join("tmp", "exports", "inventory_#{id}.csv").to_s
-  end
+  has_one_attached :file
 
   def completed?
     status == "completed"
@@ -24,5 +18,13 @@ class InventoryExport < ApplicationRecord
 
   def pending?
     status == "pending"
+  end
+
+  def expired?
+    expires_at.present? && expires_at < Time.current
+  end
+
+  def downloadable?
+    completed? && !expired?
   end
 end

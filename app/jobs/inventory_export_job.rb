@@ -12,20 +12,23 @@ class InventoryExportJob < ApplicationJob
       params: export.filters.symbolize_keys
     ).call
 
-    generate_csv(export, items)
+    csv_content = generate_csv(items)
 
-    export.update!(status: "completed")
+    export.file.attach(
+      io: StringIO.new(csv_content),
+      filename: "inventario_exportacion.csv",
+      content_type: "text/csv"
+    )
+    export.update!(status: "completed", expires_at: 1.hour.from_now)
   rescue => e
     export.update!(status: "failed", error_message: e.message) if export
   end
 
   private
 
-  def generate_csv(export, items)
+  def generate_csv(items)
     require "csv"
-    FileUtils.mkdir_p(File.dirname(export.file_path))
-
-    CSV.open(export.file_path, "w") do |csv|
+    CSV.generate(headers: true) do |csv|
       csv << headers
       items.each do |item|
         csv << row(item)

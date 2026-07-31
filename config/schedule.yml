@@ -1,0 +1,4 @@
+cleanup_inventory_exports:
+  cron: "0 3 * * *"
+  class: "CleanupInventoryExportsJob"
+  queue: default
