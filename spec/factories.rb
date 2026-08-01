@@ -67,4 +67,11 @@ FactoryBot.define do
     branch
     role
   end
+
+  factory :inventory_export do
+    status { 'pending' }
+    filters { {} }
+    user
+    store
+  end
 end

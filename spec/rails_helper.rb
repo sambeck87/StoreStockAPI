@@ -7,6 +7,8 @@ require 'factory_bot_rails'
 require 'shoulda-matchers'
 require 'database_cleaner/active_record'
 
+Dir[Rails.root.join('spec/support/**/*.rb')].sort.each { |f| require f }
+
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|
     with.test_framework :rspec
@@ -16,6 +18,7 @@ end
 
 RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
+  config.include ApiSpecHelpers
 
   config.fixture_paths = [
     Rails.root.join('spec/fixtures')
