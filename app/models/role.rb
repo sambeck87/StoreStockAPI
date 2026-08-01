@@ -1,8 +1,8 @@
 class Role < ApplicationRecord
   belongs_to :store
 
-  has_many :users
   has_many :branch_users
+  has_many :users, through: :branch_users
 
   validates :name, presence: true, uniqueness: { scope: :store_id }
 

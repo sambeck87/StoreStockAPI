@@ -22,5 +22,17 @@ RSpec.describe Api::V1::SessionsController, type: :controller do
         expect(response).to have_http_status(:unauthorized)
       end
     end
+
+    context 'with an unconfirmed email' do
+      let(:unconfirmed) do
+        create(:user, store: nil, password: 'Password1', confirmation_token: 'pending', confirmation_sent_at: Time.current)
+      end
+
+      it 'returns unauthorized' do
+        post :create, params: { email: unconfirmed.email, password: 'Password1' }
+
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
   end
 end
